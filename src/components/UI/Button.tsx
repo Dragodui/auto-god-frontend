@@ -1,0 +1,16 @@
+import React from "react";
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  addStyles?: string;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, addStyles, ...props }) => {
+  return (
+    <button className={` px-6 py-3 font-bold text-2xl border-[2px] border-[#535bf2] ${addStyles}`} {...props}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;
