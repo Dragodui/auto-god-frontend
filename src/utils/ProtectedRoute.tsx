@@ -1,21 +1,23 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { FC, ReactNode } from 'react';
+import { useAuth } from '../providers/AuthProvider';
+import { Navigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
-  redirect: string;
+  children: ReactNode;
 }
 
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ redirect }) => {
-  const loading = useSelector((state: RootState) => state.user.loading);
-  const user = useSelector((state: RootState) => state.user.user);
-
-  if (loading) {
-    return <div>Loading...</div>;
+  const authContext = useAuth();
+  if (!authContext) {
+    throw new Error("AuthContext is null");
+  }
+  const {token} = authContext;
+  if (!token) {
+    return <Navigate to="/login" />;
   }
 
-  return user ? <Outlet /> : <Navigate to={`/${redirect}`} />;
+  return children;
 };
 
 export default ProtectedRoute;

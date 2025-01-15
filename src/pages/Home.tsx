@@ -1,11 +1,18 @@
 import React from 'react';
 import Button from '../components/UI/Button';
 import Wrapper from '../components/Wrapper';
-import { getMe, logOut } from '../api/auth';
+import { getMe } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/providers/AuthProvider';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+
+  const authContext = useAuth();
+  if (!authContext) { 
+    throw new Error("AuthContext is null");
+  }
+  const { logoutAuth } = authContext;
 
   const getUserData = async(): Promise<void> => {
     try {
@@ -22,12 +29,8 @@ const Home: React.FC = () => {
 
   const logOutOfAccount = async(): Promise<void> => {
     try {
-      const response = await logOut();
-      if (!response) {
-        return;
-      }
+      logoutAuth();
       await navigate("/login");
-      window.location.reload();
     } catch (error) {
       console.error(error);
     }

@@ -29,16 +29,6 @@ export const login = async (formData: LoginData) => {
       console.error("Error while login: ", error);
     }
   };
-  
-export const logOut = async() => {
-    try {
-        const response = await api.post("/auth/logout");
-        return response;
-    } catch (error) {
-        console.error("Error while logout: ", error);
-        
-    }
-}
 
 export const getMe = async () => {
     try {

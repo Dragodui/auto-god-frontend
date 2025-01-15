@@ -7,6 +7,7 @@ import Form from "../components/UI/Form";
 import { useNavigate } from "react-router-dom";
 import { LoginData } from "../types";
 import { login } from "../api/auth";
+import { useAuth } from "@/providers/AuthProvider";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({
@@ -14,6 +15,11 @@ const Login: React.FC = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const authContext = useAuth();
+  if (!authContext) {
+    throw new Error("AuthContext is null");
+  }
+  const { loginAuth } = authContext;
   const navigate = useNavigate();
 
 
@@ -28,7 +34,8 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         console.log("Success");
         console.log(response.data);
-
+        const token = response.data.token;
+        loginAuth(token);
         setFormData({
           email: "",
           password: "",
