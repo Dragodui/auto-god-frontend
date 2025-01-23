@@ -38,4 +38,12 @@ export const getMe = async () => {
       console.error("Error while getting user data: ", error);
     }
   };
-  
+
+// export const checkIfLoggedIn = async (): Promise<boolean> => {
+//   try {
+//     const response = await getMe();
+//     return (response?.status === 200 && response !== undefined)  ? true : false;
+//   } catch (error) {
+//     console.error("Error while checking if user is logged in: ", error);
+//   }
+// }
