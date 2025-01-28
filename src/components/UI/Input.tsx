@@ -1,6 +1,6 @@
-import React, { InputHTMLAttributes, useState } from "react";
-import Button from "./Button";
-import { Eye, EyeClosed } from "lucide-react";
+import React, { InputHTMLAttributes, useState } from 'react';
+import Button from './Button';
+import { Eye, EyeClosed } from 'lucide-react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   addStyles?: string;
@@ -13,13 +13,13 @@ const Input: React.FC<InputProps> = ({ addStyles, type, ...props }) => {
     setShowPassword((prev) => !prev);
   };
 
-  const isPasswordField = type === "password";
+  const isPasswordField = type === 'password';
 
   return (
     <div className="relative w-full">
       <input
         {...props}
-        type={isPasswordField && showPassword ? "text" : type}
+        type={isPasswordField && showPassword ? 'text' : type}
         className={`text-lg px-[15px] py-[6px] rounded-md font-medium placeholder:opacity-60 w-full pr-[50px] ${addStyles}`}
       />
       {isPasswordField && (

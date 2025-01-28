@@ -1,23 +1,20 @@
-import { FC, ReactNode } from 'react';
+// src/components/ProtectedRoute.tsx
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
-import { Navigate } from 'react-router-dom';
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-}
+const ProtectedRoute: React.FC = () => {
+  const { isAuthenticated } = useAuth();
 
-const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
-
-  const authContext = useAuth();
-  if (!authContext) {
-    throw new Error("AuthContext is null");
-  }
-  const {token} = authContext;
-  if (!token) {
-    return <Navigate to="/login" />;
+  if (isAuthenticated === undefined) {
+    return <div>Loading...</div>;
   }
 
-  return children;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

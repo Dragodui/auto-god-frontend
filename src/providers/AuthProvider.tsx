@@ -1,34 +1,77 @@
-import { createContext, useState, useContext, FC, ReactNode } from 'react';
+// src/context/AuthContext.tsx
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import {
+  getMyInfo,
+  login as loginApi,
+  logout as logoutApi,
+  register as registerApi,
+} from '../api/auth';
+import { LoginData, RegisterData } from '@/types';
 
 interface AuthContextType {
-    token: string | null;
-    loginAuth: (newToken: string) => void;
-    logoutAuth: () => void;
+  isAuthenticated: boolean;
+  login: (data: LoginData) => Promise<void>;
+  logout: () => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
 }
 
-interface AuthProviderProps {
-    children: ReactNode;
-}
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const loginAuth = (newToken) => {
-    setToken(newToken);
-    localStorage.setItem('token', newToken);
+  useEffect(() => {
+    const checkAuth = async () => {
+      
+      try {
+        const response = await getMyInfo();
+        if (response) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (data: LoginData) => {
+    await loginApi(data);
+    setIsAuthenticated(true);
   };
 
-  const logoutAuth = () => {
-    setToken(null);
-    localStorage.removeItem('token');
+  const logout = async () => {
+    await logoutApi();
+    setIsAuthenticated(false);
+  };
+
+  const register = async (data: RegisterData) => {
+    await registerApi(data);
   };
 
   return (
-    <AuthContext.Provider value={{ token, loginAuth, logoutAuth }}>
-      {children}
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

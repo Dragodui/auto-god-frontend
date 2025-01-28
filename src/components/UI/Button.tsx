@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -7,7 +7,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button: React.FC<ButtonProps> = ({ children, addStyles, ...props }) => {
   return (
-    <button className={` px-6 py-3 font-bold text-2xl rounded-lg bg-secondary ${addStyles}`} {...props}>
+    <button
+      className={` px-6 py-3 font-bold text-2xl rounded-lg bg-secondary ${addStyles}`}
+      {...props}
+    >
       {children}
     </button>
   );
