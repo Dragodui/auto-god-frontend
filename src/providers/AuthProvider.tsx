@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      
       try {
         const response = await getMyInfo();
         if (response) {
@@ -40,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         setIsAuthenticated(false);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 

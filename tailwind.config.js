@@ -6,6 +6,9 @@ export default {
       colors: {
         secondary: '#646cff',
       },
+      fontFamily: {
+        sansation: ['sansation', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -53,3 +53,24 @@ h1 {
     color: #747bff;
   }
 }
+
+@font-face {
+  font-family: 'sansation';
+  src: url('./assets/fonts/sansation/Sansation_Light.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'sansation';
+  src: url('./assets/fonts/sansation/Sansation_Regular.ttf');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'sansation';
+  src: url('./assets/fonts/sansation/Sansation_Bold.ttf');
+  font-weight: 700;
+  font-style: normal;
+}

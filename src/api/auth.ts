@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { LoginData, RegisterData } from './../types';
 import api from './api';
 
@@ -34,7 +35,8 @@ export const login = async (formData: LoginData) => {
 export const logout = async () => {
   try {
     const response = await api.post('/auth/logout');
-    console.log(response.data)
+    console.log(response.data);
+    window.location.reload();
     return response.data;
   } catch (error) {
     console.error('Error while logout: ', error);
@@ -49,7 +51,7 @@ export const getMyInfo = async () => {
   } catch (error) {
     console.error('Error while getting me: ', error);
   }
-}
+};
 
 // export const getMe = async () => {
 //     try {

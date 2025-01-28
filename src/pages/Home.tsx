@@ -5,12 +5,12 @@ import { useAuth } from '@/providers/AuthProvider';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
-  const {logout: logoutUser } = useAuth();
+  const { logout: logoutUser } = useAuth();
   return (
     <Wrapper>
       <>
         <h1>HomePage</h1>
-        <Button onClick = {async () => await logoutUser()}>logout</Button>
+        <Button onClick={async () => await logoutUser()}>logout</Button>
         <Link to="/me">Profile</Link>
       </>
     </Wrapper>
