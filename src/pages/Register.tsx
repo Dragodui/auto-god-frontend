@@ -9,6 +9,7 @@ import { RegisterData } from '../types';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<RegisterData>({
     email: '',
     name: '',
@@ -30,8 +31,15 @@ const Register: React.FC = () => {
         password: '',
       });
       await navigate('/login');
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error('Register failed', error);
+      if (Array.isArray(error)) {
+        console.log(error);
+        const lastError = error[error.length - 1];
+        setError(`${lastError.path}: ${lastError.msg}`); 
+      } else {
+        setError(error.message || 'Invalid register credentials');
+      }
     }
   };
 
@@ -77,6 +85,7 @@ const Register: React.FC = () => {
         <p>
           Have an account? <Link to="/login">Log in</Link>
         </p>
+        <p className="text-red-500">{error}</p>
         <Button addStyles="max-w-[300px] w-full" type="submit">
           Create account
         </Button>

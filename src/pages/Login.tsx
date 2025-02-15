@@ -22,14 +22,24 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       await loginUser(formData);
-      await navigate('/');
-    } catch (error) {
-      console.error(error);
+      navigate('/');
+    } catch (error: any) {
+      console.error('Login failed:', error);
+  
+      if (Array.isArray(error)) {
+        console.log(error);
+        const lastError = error[error.length - 1];
+        setError(`${lastError.path}: ${lastError.msg}`); 
+      } else {
+        setError(error.message || 'Invalid login credentials');
+      }
     }
   };
+  
+  
 
   return (
     <Wrapper>

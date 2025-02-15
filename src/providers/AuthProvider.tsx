@@ -47,9 +47,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (data: LoginData) => {
-    await loginApi(data);
-    setIsAuthenticated(true);
+    try {
+      const response = await loginApi(data);
+      if (response && response.message === 'Logged in successfully') {
+        setIsAuthenticated(true);
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    } catch (error) {
+      console.error(error);
+      throw error; 
+    }
   };
+  
 
   const logout = async () => {
     await logoutApi();
@@ -57,7 +67,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (data: RegisterData) => {
-    await registerApi(data);
+    try {
+      const response = await registerApi(data);
+      console.log(response);
+    } catch (error) {
+      
+    }
   };
 
   return (

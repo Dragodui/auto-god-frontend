@@ -13,8 +13,13 @@ export const register = async (data: RegisterData) => {
       password,
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error while register: ', error);
+    if (error.response && error.response.data.errors) {
+      throw error.response.data.errors; 
+    } else {
+      throw new Error(error.response?.data?.message || 'Login failed'); 
+    }
   }
 };
 
@@ -25,12 +30,18 @@ export const login = async (formData: LoginData) => {
       login,
       password,
     });
-    console.log(response);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error while login: ', error);
+
+    if (error.response && error.response.data.errors) {
+      throw error.response.data.errors; 
+    } else {
+      throw new Error(error.response?.data?.message || 'Login failed'); 
+    }
   }
 };
+
 
 export const logout = async () => {
   try {
