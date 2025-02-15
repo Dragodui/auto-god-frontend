@@ -28,18 +28,16 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (error: any) {
       console.error('Login failed:', error);
-  
+
       if (Array.isArray(error)) {
         console.log(error);
         const lastError = error[error.length - 1];
-        setError(`${lastError.path}: ${lastError.msg}`); 
+        setError(`${lastError.path}: ${lastError.msg}`);
       } else {
         setError(error.message || 'Invalid login credentials');
       }
     }
   };
-  
-  
 
   return (
     <Wrapper>

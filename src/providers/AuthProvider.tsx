@@ -56,10 +56,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error(error);
-      throw error; 
+      throw error;
     }
   };
-  
 
   const logout = async () => {
     await logoutApi();
@@ -70,9 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await registerApi(data);
       console.log(response);
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   return (

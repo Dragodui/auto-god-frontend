@@ -22,7 +22,9 @@ const Profile: FC = () => {
 
   return (
     <Wrapper>
-      <p>{userData?.name} {userData?.lastName}</p>
+      <p>
+        {userData?.name} {userData?.lastName}
+      </p>
     </Wrapper>
   );
 };

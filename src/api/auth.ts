@@ -16,9 +16,9 @@ export const register = async (data: RegisterData) => {
   } catch (error: any) {
     console.error('Error while register: ', error);
     if (error.response && error.response.data.errors) {
-      throw error.response.data.errors; 
+      throw error.response.data.errors;
     } else {
-      throw new Error(error.response?.data?.message || 'Login failed'); 
+      throw new Error(error.response?.data?.message || 'Login failed');
     }
   }
 };
@@ -35,13 +35,12 @@ export const login = async (formData: LoginData) => {
     console.error('Error while login: ', error);
 
     if (error.response && error.response.data.errors) {
-      throw error.response.data.errors; 
+      throw error.response.data.errors;
     } else {
-      throw new Error(error.response?.data?.message || 'Login failed'); 
+      throw new Error(error.response?.data?.message || 'Login failed');
     }
   }
 };
-
 
 export const logout = async () => {
   try {

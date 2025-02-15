@@ -36,7 +36,7 @@ const Register: React.FC = () => {
       if (Array.isArray(error)) {
         console.log(error);
         const lastError = error[error.length - 1];
-        setError(`${lastError.path}: ${lastError.msg}`); 
+        setError(`${lastError.path}: ${lastError.msg}`);
       } else {
         setError(error.message || 'Invalid register credentials');
       }

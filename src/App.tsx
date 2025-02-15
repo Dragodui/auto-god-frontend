@@ -12,7 +12,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-      <Header />
+        <Header />
         <Routes>
           {/* public routes (only if not authenticated) */}
           <Route element={<PublicRoute />}>
