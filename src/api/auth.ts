@@ -45,7 +45,6 @@ export const login = async (formData: LoginData) => {
 export const logout = async () => {
   try {
     const response = await api.post('/auth/logout');
-    console.log(response.data);
     window.location.reload();
     return response.data;
   } catch (error) {
@@ -56,7 +55,6 @@ export const logout = async () => {
 export const getMyInfo = async () => {
   try {
     const response = await api.get('/auth/me');
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error while getting me: ', error);

@@ -1,30 +1,233 @@
+'use client';
+
+import api from '@/api/api';
 import { getMyInfo } from '@/api/auth';
 import Wrapper from '@/components/Wrapper';
-import { User } from '@/types';
-import React, { FC, useEffect, useState } from 'react';
+import type { User } from '@/types';
+import { CalendarIcon, CarIcon, StarIcon, PlusCircle } from 'lucide-react';
+import type React from 'react';
+import { type FC, useEffect, useState } from 'react';
+import Button from '@/components/UI/Button';
+import Input from '@/components/UI/Input';
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
+  const [lastActivity, setLastActivity] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    lastName: '',
+    nickname: '',
+    car: '',
+  });
 
   useEffect(() => {
     getUserInfo();
+    getLastActivity();
   }, []);
 
   const getUserInfo = async () => {
     try {
       const userData = await getMyInfo();
-      console.log(userData);
       setUserData(userData);
+      setEditForm({
+        name: userData.name,
+        lastName: userData.lastName,
+        nickname: userData.nickname,
+        car: userData.car || '',
+      });
     } catch (error) {
       console.error('Error while getting me: ', error);
     }
   };
 
+  const getLastActivity = async () => {
+    try {
+      const response = await api.get('/user/activity');
+      const lastActivity = response.data.lastActivityPosts;
+      setLastActivity(lastActivity);
+    } catch (error) {
+      console.error('Error while getting last activity: ', error);
+    }
+  };
+
+  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+    try {
+      await api.post('/user/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      getUserInfo();
+    } catch (error) {
+      console.error('Error while uploading avatar: ', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.put('/user/data', editForm);
+      getUserInfo();
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Wrapper>
-      <p>
-        {userData?.name} {userData?.lastName}
-      </p>
+      <div className="min-h-screen bg-bg text-text w-full">
+        <div className="mx-auto">
+          <div className=" rounded-xl shadow-lg overflow-hidden">
+            <div className="md:flex px-8 py-4">
+              <div className="md:flex-shrink-0">
+                <div className="relative w-48 h-48 mx-auto md:mx-0">
+                  {userData.avatar ? (
+                    <img
+                      className="w-full h-full object-cover rounded-full"
+                      src={`http://localhost:8000${userData.avatar}`}
+                      alt="User avatar"
+                    />
+                  ) : (
+                    <div className="w-full h-full rounded-full bg-secondary flex items-center justify-center text-white">
+                      No photo
+                    </div>
+                  )}
+                  <label
+                    htmlFor="avatar-upload"
+                    className="absolute bottom-0 right-0 bg-secondary text-white p-2 rounded-full cursor-pointer"
+                  >
+                    <PlusCircle size={24} />
+                  </label>
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    onChange={uploadAvatar}
+                    className="hidden"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+              <div className="p-8 flex-grow">
+                {isEditing ? (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleInputChange}
+                      placeholder="Name"
+                    />
+                    <Input
+                      name="lastName"
+                      value={editForm.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                    />
+                    <Input
+                      name="nickname"
+                      value={editForm.nickname}
+                      onChange={handleInputChange}
+                      placeholder="Nickname"
+                    />
+                    <Input
+                      name="car"
+                      value={editForm.car}
+                      onChange={handleInputChange}
+                      placeholder="Car"
+                    />
+                    <div className="flex items-center gap-3">
+                      <Button addStyles="text-lg px-4 py-2" type="submit">
+                        Save
+                      </Button>
+                      <Button
+                        addStyles="text-lg px-4 py-2"
+                        type="button"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="uppercase tracking-wide text-sm text-secondary font-semibold">
+                      {userData.rank} Member
+                    </div>
+                    <h1 className="mt-2 text-3xl font-bold text-white">
+                      {userData.name} {userData.lastName}
+                    </h1>
+                    <p className="mt-2 text-gray-400">@{userData.nickname}</p>
+                    <Button onClick={() => setIsEditing(true)} className="mt-4">
+                      Edit Profile
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="px-8 py-4 bg-blocks">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center">
+                  <CarIcon className="h-6 w-6 text-secondary mr-2" />
+                  <span>{userData.car || 'No car specified'}</span>
+                </div>
+                <div className="flex items-center">
+                  <StarIcon className="h-6 w-6 text-secondary mr-2" />
+                  <span>
+                    {userData.rank.charAt(0).toUpperCase() +
+                      userData.rank.slice(1)}{' '}
+                    Rank
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <CalendarIcon className="h-6 w-6 text-secondary mr-2" />
+                  <span>
+                    Member since{' '}
+                    {new Date(userData.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Recent Forum Activity
+            </h2>
+            <ul className="space-y-4">
+              {lastActivity !== null && lastActivity.length > 0 ? (
+                lastActivity?.map((activity: any) => (
+                  <li key={activity.id}>
+                    <a
+                      href={`/post/${activity.id}`}
+                      className="text-secondary hover:underline"
+                    >
+                      {activity.title}
+                    </a>
+                    <p className="text-gray-400">{activity.createdAt}</p>
+                  </li>
+                ))
+              ) : (
+                <li className="text-gray-400">No recent activity</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      </div>
     </Wrapper>
   );
 };

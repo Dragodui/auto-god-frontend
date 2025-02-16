@@ -67,8 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (data: RegisterData) => {
     try {
-      const response = await registerApi(data);
-      console.log(response);
+      await registerApi(data);
     } catch (error) {}
   };
 

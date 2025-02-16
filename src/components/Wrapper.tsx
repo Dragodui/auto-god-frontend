@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface WrapperProps {
-  children: React.ReactElement;
+  children: React.ReactElement[] | React.ReactElement;
 }
 
 const Wrapper: React.FC<WrapperProps> = ({ children }) => {

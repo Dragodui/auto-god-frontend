@@ -30,7 +30,6 @@ const Login: React.FC = () => {
       console.error('Login failed:', error);
 
       if (Array.isArray(error)) {
-        console.log(error);
         const lastError = error[error.length - 1];
         setError(`${lastError.path}: ${lastError.msg}`);
       } else {

@@ -4,7 +4,7 @@ import Button from './UI/Button';
 import { useAuth } from '@/providers/AuthProvider';
 import { logout } from '@/api/auth';
 import { Link } from 'react-router-dom';
-import { CircleUserRound } from 'lucide-react';
+import { CircleUser, CircleUserRound, User } from 'lucide-react';
 
 const Header: FC = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
@@ -23,7 +23,7 @@ const Header: FC = (): JSX.Element => {
             {isAuthenticated ? (
               <>
                 <Link to="/me" className="text-white hover:text-white">
-                  <CircleUserRound size={42} />
+                  <CircleUser size={32} />
                 </Link>
                 <Button addStyles="text-sm" onClick={() => logout()}>
                   Log Out

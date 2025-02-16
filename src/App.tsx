@@ -21,10 +21,10 @@ function App() {
           </Route>
           {/* private routes (only if authenticated) */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
             <Route path="/me" element={<Profile />} />
           </Route>
           <Route path="*" element={<div>404 Not Found</div>} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </Router>
     </AuthProvider>

@@ -26,6 +26,7 @@ export interface User {
   id: string;
   email: string;
   car?: string;
+  avatar?: string;
   createdAt: string;
   rank: string;
   name: string;

@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         secondary: '#646cff',
+        blocks: '#2c2e4c',
       },
       fontFamily: {
         sansation: ['sansation', 'sans-serif'],
