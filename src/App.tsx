@@ -2,9 +2,9 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-import ProtectedRoute from './utils/ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 import { AuthProvider } from './providers/AuthProvider';
-import PublicRoute from './utils/PublicRoute';
+import PublicRoute from './routes/PublicRoute';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 

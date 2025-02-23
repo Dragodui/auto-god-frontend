@@ -2,12 +2,13 @@ import { FC } from 'react';
 import Wrapper from './Wrapper';
 import Button from './UI/Button';
 import { useAuth } from '@/providers/AuthProvider';
-import { logout } from '@/api/auth';
+import { logout } from '@/services/authService';
 import { Link } from 'react-router-dom';
 import { CircleUser, CircleUserRound, User } from 'lucide-react';
 
 const Header: FC = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated)
 
   return (
     <header className="font-sansation py-[20px]">

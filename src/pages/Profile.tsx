@@ -1,20 +1,29 @@
-'use client';
-
-import api from '@/api/api';
-import { getMyInfo } from '@/api/auth';
 import Wrapper from '@/components/Wrapper';
-import type { User } from '@/types';
-import { CalendarIcon, CarIcon, StarIcon, PlusCircle } from 'lucide-react';
+import type { Activity, ChangeUserData, User } from '@/types';
+import {
+  CalendarIcon,
+  CarIcon,
+  StarIcon,
+  PlusCircle,
+  Loader,
+} from 'lucide-react';
 import type React from 'react';
 import { type FC, useEffect, useState } from 'react';
 import Button from '@/components/UI/Button';
-import Input from '@/components/UI/Input';
+import Input from '@/components/ui/Input';
+import {
+  getLastUserActivity,
+  getCurrentProfileData,
+  saveUserData,
+  uploadUserAvatar,
+} from '@/services/userService';
+``;
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
-  const [lastActivity, setLastActivity] = useState<any>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({
+  const [lastActivity, setLastActivity] = useState<Activity[] | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editForm, setEditForm] = useState<ChangeUserData>({
     name: '',
     lastName: '',
     nickname: '',
@@ -22,52 +31,24 @@ const Profile: FC = () => {
   });
 
   useEffect(() => {
-    getUserInfo();
-    getLastActivity();
+    getCurrentProfileData().then((data) => {
+      if (data && 'name' in data) {
+        setUserData(data as User);
+        setEditForm({
+          name: data.name,
+          lastName: data.lastName,
+          nickname: data.nickname || '',
+          car: data.car || '',
+        });
+      }
+    });
+
+    getLastUserActivity().then((data) => {
+      if (Array.isArray(data)) {
+        setLastActivity(data);
+      }
+    });
   }, []);
-
-  const getUserInfo = async () => {
-    try {
-      const userData = await getMyInfo();
-      setUserData(userData);
-      setEditForm({
-        name: userData.name,
-        lastName: userData.lastName,
-        nickname: userData.nickname,
-        car: userData.car || '',
-      });
-    } catch (error) {
-      console.error('Error while getting me: ', error);
-    }
-  };
-
-  const getLastActivity = async () => {
-    try {
-      const response = await api.get('/user/activity');
-      const lastActivity = response.data.lastActivityPosts;
-      setLastActivity(lastActivity);
-    } catch (error) {
-      console.error('Error while getting last activity: ', error);
-    }
-  };
-
-  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('avatar', file);
-    try {
-      await api.post('/user/avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      getUserInfo();
-    } catch (error) {
-      console.error('Error while uploading avatar: ', error);
-    }
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,17 +57,20 @@ const Profile: FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await api.put('/user/data', editForm);
-      getUserInfo();
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
+    await saveUserData(editForm);
+    const data = await getCurrentProfileData();
+    setUserData(data as User);
+    setIsEditing(false);
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await uploadUserAvatar(e);
+    const data = await getCurrentProfileData();
+    setUserData(data as User);
   };
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -100,7 +84,7 @@ const Profile: FC = () => {
                   {userData.avatar ? (
                     <img
                       className="w-full h-full object-cover rounded-full"
-                      src={`http://localhost:8000${userData.avatar}`}
+                      src={`${import.meta.env.VITE_SERVER_HOST}${userData.avatar}`}
                       alt="User avatar"
                     />
                   ) : (
@@ -117,7 +101,7 @@ const Profile: FC = () => {
                   <input
                     id="avatar-upload"
                     type="file"
-                    onChange={uploadAvatar}
+                    onChange={handleAvatarUpload}
                     className="hidden"
                     accept="image/*"
                   />

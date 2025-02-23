@@ -1,11 +1,11 @@
 import React, { FormEvent, useState } from 'react';
-import Wrapper from '../components/Wrapper';
-import Input from '../components/UI/Input';
-import Button from '../components/UI/Button';
+import Wrapper from '@/components/Wrapper';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import Form from '../components/UI/Form';
-import { register } from '../api/auth';
-import { RegisterData } from '../types';
+import Form from '@/components/ui/AuthForm';
+import { register } from '@/services/authService';
+import { RegisterData } from '@/types';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();

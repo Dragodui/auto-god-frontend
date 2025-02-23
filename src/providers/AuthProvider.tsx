@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import {
   createContext,
   useContext,
@@ -7,12 +6,12 @@ import {
   ReactNode,
 } from 'react';
 import {
-  getMyInfo,
   login as loginApi,
   logout as logoutApi,
   register as registerApi,
-} from '../api/auth';
+} from '../services/authService';
 import { LoginData, RegisterData } from '@/types';
+import { getCurrentProfileData } from '@/services/userService';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -30,8 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await getMyInfo();
-        if (response) {
+        const response = await getCurrentProfileData();
+        console.log(response);
+        if (!('message' in response)) {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);

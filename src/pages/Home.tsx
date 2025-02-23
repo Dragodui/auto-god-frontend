@@ -1,57 +1,37 @@
 import React, { useEffect } from 'react';
 import Wrapper from '../components/Wrapper';
 import { Link } from 'react-router-dom';
-import {
-  Bell,
-  Car,
-  CircleDollarSign,
-  MessageCircle,
-  Settings,
-  Shield,
-  Users,
-  Wrench,
-} from 'lucide-react';
-import api from '@/api/api';
+import { Bell, Loader, MessageCircle, Users, Wrench } from 'lucide-react';
+import { getForumStats } from '@/services/statsService';
+import { getForumTopics } from '@/services/topicService';
+import { Topic } from '@/types';
+import { Stats } from '@/types';
 
 const Home: React.FC = () => {
-  const [stats, setStats] = React.useState<any | null>(null);
-  const [topics, setTopics] = React.useState<any[] | null>(null);
+  const [stats, setStats] = React.useState<Stats | null>(null);
+  const [topics, setTopics] = React.useState<Topic[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
-    getStats();
-    getTopics();
+    getForumStats().then((data) => {
+      if (data !== null) {
+        setStats(data);
+      }
+    });
+    getForumTopics().then((data) => {
+      if (Array.isArray(data)) {
+        setTopics(data);
+      }
+    });
+    setLoading(false);
   }, []);
-
-  const getStats = async () => {
-    try {
-      const response = await api.get('/stats');
-      setStats(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getTopics = async () => {
-    try {
-      const response = await api.get('/topics');
-      setTopics(response.data || []);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      setTopics([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <Wrapper>
       {loading ? (
-        <div>Loading...</div>
+        <Loader />
       ) : (
         <div className="min-h-screen bg-[#222225] text-white w-full">
-          {/* Hero Section */}
           <section className="container mx-auto py-16 md:py-24">
             <div className="flex flex-col md:flex-row items-center justify-center gap-8">
               <div>
@@ -64,7 +44,7 @@ const Home: React.FC = () => {
               </div>
               <div className="w-full max-w-[300px]">
                 <img
-                  src="http://localhost:8000/uploads/germany.png"
+                  src={`${import.meta.env.VITE_SERVER_HOST}/uploads/germany.png`}
                   alt="German Map"
                   width={300}
                   height={400}
@@ -74,20 +54,18 @@ const Home: React.FC = () => {
             </div>
           </section>
 
-          {/* Topics Section */}
           <section className="container mx-auto py-16">
             <h2 className="text-5xl font-bold mb-8">Topics</h2>
 
             {topics && topics.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 font-sansation">
-                {/* Основная тема (2x2) */}
                 <div className="col-span-2 row-span-2 relative rounded-lg overflow-hidden">
                   <Link
                     to={`/topics/${topics[0]?.title}`}
                     className="p-6 rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                     style={{
                       backgroundImage: topics[0]?.cover
-                        ? `url(http://localhost:8000${topics[0].cover})`
+                        ? `url(${import.meta.env.VITE_SERVER_HOST}${topics[0].cover})`
                         : 'none',
                     }}
                   >
@@ -100,7 +78,6 @@ const Home: React.FC = () => {
                   </Link>
                 </div>
 
-                {/* Остальные темы */}
                 {topics.slice(1).map((topic) => (
                   <div
                     key={topic.id}
@@ -111,7 +88,7 @@ const Home: React.FC = () => {
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
                         backgroundImage: topic.cover
-                          ? `url(http://localhost:8000${topic.cover})`
+                          ? `url(${import.meta.env.VITE_SERVER_HOST}${topic.cover})`
                           : 'none',
                       }}
                     >
@@ -137,7 +114,6 @@ const Home: React.FC = () => {
             </Link>
           </section>
 
-          {/* Forum Statistics */}
           <section className="container mx-auto py-16">
             <h2 className="text-5xl font-bold mb-8">Forum Statistics</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

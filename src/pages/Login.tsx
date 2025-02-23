@@ -1,9 +1,9 @@
 import React, { FormEvent, useState } from 'react';
 import Wrapper from '../components/Wrapper';
-import Input from '../components/UI/Input';
+import Input from '../components/ui/Input';
 import { Link } from 'react-router-dom';
-import Button from '../components/UI/Button';
-import Form from '../components/UI/Form';
+import Button from '@/components/ui/Button';
+import Form from '../components/ui/AuthForm';
 import { useNavigate } from 'react-router-dom';
 import { LoginData } from '../types';
 import { useAuth } from '@/providers/AuthProvider';
