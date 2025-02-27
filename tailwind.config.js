@@ -6,6 +6,8 @@ export default {
       colors: {
         secondary: '#646cff',
         blocks: '#2c2e4c',
+        bg: '#222225',
+        text: '#f0f0f0',
       },
       fontFamily: {
         sansation: ['sansation', 'sans-serif'],

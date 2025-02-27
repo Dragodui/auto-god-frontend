@@ -5,10 +5,24 @@ import { useAuth } from '@/providers/AuthProvider';
 import { logout } from '@/services/authService';
 import { Link } from 'react-router-dom';
 import { CircleUser, CircleUserRound, User } from 'lucide-react';
+import { FallingMenu } from './UI/FallingMenu';
 
 const Header: FC = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
+  const fallingMenuPages = [
+    {
+      label: 'Home',
+      href: '/',
+    },
+    {
+      label: 'Topics',
+      href: '/topics',
+    },
+    {
+      label: 'News',
+      href: '/news',
+    },
+  ];
 
   return (
     <header className="font-sansation py-[20px]">
@@ -21,6 +35,7 @@ const Header: FC = (): JSX.Element => {
             AutoGOD
           </Link>
           <nav className="flex gap-5 items-center">
+            <FallingMenu label="Navigation" items={fallingMenuPages} />
             {isAuthenticated ? (
               <>
                 <Link to="/me" className="text-white hover:text-white">

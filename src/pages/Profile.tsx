@@ -17,7 +17,6 @@ import {
   saveUserData,
   uploadUserAvatar,
 } from '@/services/userService';
-``;
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);

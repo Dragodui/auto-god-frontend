@@ -7,6 +7,10 @@ import { AuthProvider } from './providers/AuthProvider';
 import PublicRoute from './routes/PublicRoute';
 import Profile from './pages/Profile';
 import Header from './components/Header';
+import Topics from './pages/Topics';
+import News from './pages/News';
+import Topic from './pages/Topic';
+import CreateNews from './pages/CreateNews';
 
 function App() {
   return (
@@ -22,9 +26,13 @@ function App() {
           {/* private routes (only if authenticated) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/me" element={<Profile />} />
+            <Route path="/create-news" element={<CreateNews />} />
           </Route>
           <Route path="*" element={<div>404 Not Found</div>} />
           <Route path="/" element={<Home />} />
+          <Route path="/topics" element={<Topics />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/topics/:topicName" element={<Topic />} />
         </Routes>
       </Router>
     </AuthProvider>

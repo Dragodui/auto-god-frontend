@@ -2,51 +2,45 @@ import React, { useEffect } from 'react';
 import Wrapper from '../components/Wrapper';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getTopics } from '@/api/topics';
+import { getNews } from '@/services/newsService';
+import { Loader } from 'lucide-react';
 
-const Topics: React.FC = () => {
-  const [topics, setTopics] = React.useState<any[] | null>(null);
+const News: React.FC = () => {
+  const [news, setNews] = React.useState<any[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const getData = async () => {
-    setTopics(await getTopics());
+    setNews(await getNews());
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     getData();
   }, []);
 
-
   return (
     <Wrapper>
       {loading ? (
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 1 }}
-        >
-          Loading...
-        </motion.div>
+        <Loader />
       ) : (
         <div className="min-h-screen bg-[#222225] text-white w-full">
           <section className="container mx-auto py-16">
-            <motion.h2 
-              initial={{ opacity: 0, y: -20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.7 }} 
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
               className="text-5xl font-bold mb-8"
             >
-              Topics
+              News
             </motion.h2>
-            {topics && topics.length > 0 ? (
+            {news && news.length > 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ staggerChildren: 0.2, delayChildren: 0.3 }}
                 className="grid grid-cols-2 md:grid-cols-3 gap-4 font-sansation"
               >
-                {topics.slice(0, 6).map((topic, index) => (
+                {news.slice(0, 6).map((topic, index) => (
                   <motion.div
                     key={topic.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -55,7 +49,7 @@ const Topics: React.FC = () => {
                     className="relative rounded-lg overflow-hidden"
                   >
                     <Link
-                      to={`/topics/${topic?.title}`}
+                      to={`/news/${topic?.title}`}
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
                         backgroundImage: topic.cover
@@ -74,13 +68,13 @@ const Topics: React.FC = () => {
                 ))}
               </motion.div>
             ) : (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
                 className="text-gray-400"
               >
-                No topics available.
+                No news available.
               </motion.div>
             )}
           </section>
@@ -90,5 +84,4 @@ const Topics: React.FC = () => {
   );
 };
 
-export default Topics;
-
+export default News;

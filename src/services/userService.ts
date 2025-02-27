@@ -1,4 +1,4 @@
-import api from '@/api/api';
+import api from '@/utils/api';
 import { Activity, ChangeUserData, MessageResponse, User } from '@/types';
 
 export const getCurrentProfileData = async (): Promise<

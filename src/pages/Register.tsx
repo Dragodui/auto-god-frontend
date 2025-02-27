@@ -20,7 +20,6 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     try {
-      console.log('reacting account...');
       e.preventDefault();
       await register(formData);
       setFormData({
@@ -34,7 +33,7 @@ const Register: React.FC = () => {
     } catch (error: any) {
       console.error('Register failed', error);
       if (Array.isArray(error)) {
-        console.log(error);
+        console.error(error);
         const lastError = error[error.length - 1];
         setError(`${lastError.path}: ${lastError.msg}`);
       } else {

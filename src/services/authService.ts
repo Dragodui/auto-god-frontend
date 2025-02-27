@@ -1,5 +1,5 @@
 import { LoginData, MessageResponse, RegisterData } from '../types';
-import api from '../api/api';
+import api from '../utils/api';
 
 export const register = async (
   data: RegisterData

@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = async () => {
       try {
         const response = await getCurrentProfileData();
-        console.log(response);
         if (!('message' in response)) {
           setIsAuthenticated(true);
         } else {
@@ -68,7 +67,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (data: RegisterData) => {
     try {
       await registerApi(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   return (

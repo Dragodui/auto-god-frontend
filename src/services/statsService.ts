@@ -1,4 +1,4 @@
-import api from '@/api/api';
+import api from '@/utils/api';
 import { Stats } from '@/types';
 
 export const getForumStats = async (): Promise<Stats | null> => {

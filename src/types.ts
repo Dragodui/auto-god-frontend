@@ -46,6 +46,7 @@ export interface ChangeUserData {
 }
 
 export interface Post {
+  _id: string;
   authorId: string;
   title: string;
   content: string;
@@ -54,6 +55,19 @@ export interface Post {
   views: number;
   topicId: string;
   tags: string[];
+}
+
+export interface News {
+  _id: string;
+  authorId: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  likes: number;
+  views: number;
+  topicId: string;
+  tags: string[];
+  isMarkDown: boolean;
 }
 
 export interface Comment {
@@ -71,7 +85,7 @@ export interface Activity {
 }
 
 export interface Topic {
-  id: string;
+  _id: string;
   title: string;
   cover: string;
 }
@@ -81,4 +95,9 @@ export interface Stats {
   posts: number;
   news: number;
   topics: number;
+}
+
+export interface Tag {
+  _id: string;
+  title: string;
 }

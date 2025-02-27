@@ -2,39 +2,34 @@ import React, { useEffect } from 'react';
 import Wrapper from '../components/Wrapper';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getTopics } from '@/api/topics';
+import { Topic } from '@/types';
+import { Loader } from 'lucide-react';
+import { getForumTopics } from '@/services/topicService';
 
 const Topics: React.FC = () => {
-  const [topics, setTopics] = React.useState<any[] | null>(null);
+  const [topics, setTopics] = React.useState<Topic[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const getData = async () => {
-    setTopics(await getTopics());
+    setTopics(await getForumTopics() as Topic[]);
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     getData();
   }, []);
 
-
   return (
     <Wrapper>
       {loading ? (
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 1 }}
-        >
-          Loading...
-        </motion.div>
+        <Loader />
       ) : (
         <div className="min-h-screen bg-[#222225] text-white w-full">
           <section className="container mx-auto py-16">
-            <motion.h2 
-              initial={{ opacity: 0, y: -20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.7 }} 
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
               className="text-5xl font-bold mb-8"
             >
               Topics
@@ -48,14 +43,14 @@ const Topics: React.FC = () => {
               >
                 {topics.slice(0, 6).map((topic, index) => (
                   <motion.div
-                    key={topic.id}
+                    key={topic.title}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="relative rounded-lg overflow-hidden"
                   >
                     <Link
-                      to={`/topics/${topic?.title}`}
+                      to={`/topics/${topic.title}`}
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
                         backgroundImage: topic.cover
@@ -74,9 +69,9 @@ const Topics: React.FC = () => {
                 ))}
               </motion.div>
             ) : (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
                 className="text-gray-400"
               >
@@ -91,4 +86,3 @@ const Topics: React.FC = () => {
 };
 
 export default Topics;
-
