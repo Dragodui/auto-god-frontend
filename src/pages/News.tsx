@@ -42,18 +42,18 @@ const News: React.FC = () => {
               >
                 {news.slice(0, 6).map((topic, index) => (
                   <motion.div
-                    key={topic.id}
+                    key={topic._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="relative rounded-lg overflow-hidden"
                   >
                     <Link
-                      to={`/news/${topic?.title}`}
+                      to={`/news/${topic?._id}`}
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
-                        backgroundImage: topic.cover
-                          ? `url(${import.meta.env.VITE_SERVER_HOST}${topic.cover})`
+                        backgroundImage: topic.image
+                          ? `url(${import.meta.env.VITE_SERVER_HOST}${topic.image})`
                           : 'none',
                       }}
                     >

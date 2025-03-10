@@ -11,6 +11,10 @@ import Topics from './pages/Topics';
 import News from './pages/News';
 import Topic from './pages/Topic';
 import CreateNews from './pages/CreateNews';
+import CreatePost from './pages/CreatePost';
+import NotFound from './pages/404';
+import SingleNews from './pages/SingleNews';
+import SinglePost from './pages/SinglePost';
 
 function App() {
   return (
@@ -27,12 +31,16 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/me" element={<Profile />} />
             <Route path="/create-news" element={<CreateNews />} />
+            <Route path="/create-post" element={<CreatePost />} />
           </Route>
-          <Route path="*" element={<div>404 Not Found</div>} />
+          {/* public routes */}
+          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Home />} />
           <Route path="/topics" element={<Topics />} />
           <Route path="/news" element={<News />} />
           <Route path="/topics/:topicName" element={<Topic />} />
+          <Route path="/news/:newsId" element={<SingleNews />} />
+          <Route path="/posts/:postId" element={<SinglePost />} />
         </Routes>
       </Router>
     </AuthProvider>

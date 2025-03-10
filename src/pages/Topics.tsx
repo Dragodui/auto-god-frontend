@@ -11,7 +11,7 @@ const Topics: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const getData = async () => {
-    setTopics(await getForumTopics() as Topic[]);
+    setTopics((await getForumTopics()) as Topic[]);
     setLoading(false);
   };
 

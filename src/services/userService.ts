@@ -52,3 +52,12 @@ export const saveUserData = async (form: ChangeUserData): Promise<void> => {
     console.error('Error updating profile:', error);
   }
 };
+
+export const getUserById = async (id: string) => {
+  try {
+    const response = await api.get(`/user/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error while getting user by id: ', error);
+  }
+};
