@@ -30,3 +30,13 @@ export const getPost = async (postId: string) => {
   const response = await api.get(`/posts/${postId}`);
   return response.data;
 };
+
+export const likePost = async (postId: string) => {
+  const response = await api.put(`/posts/like/${postId}`);
+  return response.data;
+};
+
+export const viewPost = async (postId: string) => {
+  const response = await api.put(`/posts/views/${postId}`);
+  return response.data;
+};

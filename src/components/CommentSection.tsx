@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Reply, Send, User, ChevronDown, ChevronUp } from 'lucide-react';
-import { addComment } from '@/services/commentsService';
+import { addComment, likeComment } from '@/services/commentsService';
 import { formatDistanceToNow } from 'date-fns';
 import { getImage } from '@/utils/getImage';
 import { getCurrentProfileData } from '@/services/userService';
@@ -34,7 +34,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   comments,
   onRefresh,
 }) => {
-    const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [commentContent, setCommentContent] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
@@ -42,33 +42,27 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   const [expandedReplies, setExpandedReplies] = useState<
     Record<string, boolean>
   >({});
-
   useEffect(() => {
     getCurrentUser();
   }, []);
 
   const getCurrentUser = async () => {
     const user = await getCurrentProfileData();
-    
     setCurrentUser(user);
   }
 
-  // Group comments by parent/reply
   const parentComments = comments.filter((comment) => !comment.replyTo);
   const replyComments = comments.filter((comment) => comment.replyTo);
 
-  // Get replies for a specific comment
   const getRepliesForComment = (commentId: string) => {
     return replyComments.filter((reply) => reply.replyTo === commentId);
   };
 
-  // Toggle reply form
   const handleReplyClick = (commentId: string) => {
     setReplyingTo(replyingTo === commentId ? null : commentId);
     setReplyContent('');
   };
 
-  // Toggle expanded replies
   const toggleReplies = (commentId: string) => {
     setExpandedReplies((prev) => ({
       ...prev,
@@ -108,8 +102,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   // Like a comment (mock implementation)
   const handleLikeComment = async (commentId: string) => {
     try {
-      // Call your API to like the comment
-      // For now, just refresh to get updated data
+      await likeComment(commentId);
       onRefresh();
     } catch (error) {
       console.error('Error liking comment:', error);

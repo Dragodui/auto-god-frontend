@@ -47,14 +47,13 @@ const CreatePost: FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await createPost(
+      await createPost(
         form.title,
         form.content,
         form.tagIds,
         form.topicId,
         image
       );
-      console.log(response);
       navigate('/');
     } catch (error: any) {
       console.error(error);

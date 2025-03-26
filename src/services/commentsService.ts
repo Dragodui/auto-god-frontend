@@ -17,3 +17,8 @@ export const addComment = async (
   });
   return response.data;
 };
+
+export const likeComment = async (commentId: string) => {
+  const response = await api.put(`/comments/like/${commentId}`);
+  return response.data;
+}

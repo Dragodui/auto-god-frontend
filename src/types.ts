@@ -27,7 +27,7 @@ export interface UserData {
 }
 
 export interface User {
-  id: string;
+  _id: string;
   email: string;
   car?: string;
   avatar?: string;

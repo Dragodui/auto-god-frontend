@@ -50,7 +50,7 @@ const CreateNews: FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await createNew(
+      await createNew(
         form.title,
         form.content,
         form.topicId,
@@ -58,7 +58,6 @@ const CreateNews: FC = () => {
         image,
         form.tagIds
       );
-      console.log(response);
       navigate('/news');
     } catch (error: any) {
       console.error(error);
