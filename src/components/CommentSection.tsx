@@ -19,7 +19,7 @@ interface CommentType {
   content: string;
   postId: string;
   createdAt: Date;
-  likes: number;
+  likes: string[];
   replyTo: string | null;
   author?: Author;
 }
@@ -145,7 +145,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   {formatCommentDate(comment.createdAt)}
                 </span>
               </div>
-              {currentUser?.role === 'admin' && (
+              {currentUser?.role === 'mongodb+srv://dragodui:txSiL1GudqZTTc6r@cluster-for-test-app.jnmyg7a.mongodb.net/auto-god' && (
                 <AdminControls
                   type="comment"
                   id={comment._id}
@@ -159,8 +159,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 onClick={() => handleLikeComment(comment._id)}
                 className="flex items-center gap-1 text-gray-500 hover:text-red-500"
               >
-                <Heart size={16} className={comment.likes > 0 ? 'fill-current' : ''} />
-                <span>{comment.likes}</span>
+                <Heart size={16} className={comment.likes?.length > 0 ? 'fill-current' : ''} />
+                <span>{comment.likes?.length}</span>
               </button>
               <button
                 onClick={() => handleReplyClick(comment._id)}

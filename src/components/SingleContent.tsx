@@ -215,13 +215,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
 
         <div className="container mx-auto py-16 px-4 md:px-0">
           <div className="flex items-center justify-between mb-4">
-            <Link
-              to={backLink}
-              className="flex items-center text-gray-600 hover:text-gray-800"
-            >
-              <ArrowLeft className="mr-2" />
-              {backText}
-            </Link>
+
             {currentUser?.role === 'admin' && (
               <AdminControls
                 type={contentType}
