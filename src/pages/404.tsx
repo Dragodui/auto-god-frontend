@@ -1,6 +1,6 @@
 import type React from 'react';
 import Wrapper from '../components/Wrapper';
-import Button from '@/components/ui/Button';
+import Button from '@/components/UI/Button';
 import { Link } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 

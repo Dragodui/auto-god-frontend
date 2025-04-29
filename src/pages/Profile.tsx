@@ -10,7 +10,7 @@ import {
 import type React from 'react';
 import { type FC, useEffect, useState } from 'react';
 import Button from '@/components/UI/Button';
-import Input from '@/components/ui/Input';
+import Input from '@/components/UI/Input';
 import {
   getLastUserActivity,
   getCurrentProfileData,

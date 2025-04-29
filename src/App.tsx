@@ -15,6 +15,7 @@ import CreatePost from './pages/CreatePost';
 import NotFound from './pages/404';
 import SingleNews from './pages/SingleNews';
 import SinglePost from './pages/SinglePost';
+import Posts from './pages/Posts';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/topics" element={<Topics />} />
           <Route path="/news" element={<News />} />
+          <Route path="/posts" element={<Posts />} />
           <Route path="/topics/:topicName" element={<Topic />} />
           <Route path="/news/:newsId" element={<SingleNews />} />
           <Route path="/posts/:postId" element={<SinglePost />} />
