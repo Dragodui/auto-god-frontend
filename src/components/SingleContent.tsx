@@ -218,8 +218,8 @@ const SingleContent: React.FC<SingleContentProps> = ({
 
             {currentUser?.role === 'admin' && (
               <AdminControls
-                type={contentType}
-                id={id}
+                itemType={contentType}
+                itemId={id}
                 onDelete={() => window.location.href = backLink}
               />
             )}
@@ -359,7 +359,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
             </button>
 
             <div className="flex gap-2">
-              <button className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors">Share</button>
+             
               <Link to={moreLink} className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors">
                 {moreText}
               </Link>

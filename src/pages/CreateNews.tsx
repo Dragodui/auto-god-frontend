@@ -103,8 +103,8 @@ const CreateNews: FC = () => {
   };
 
   return (
-    <Wrapper className="pt-[100px]">
-      <section className="container mx-auto py-16">
+    <Wrapper className="pt-[70px]">
+      <section className="container mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-4xl font-bold">Create News</h1>
           <div className="flex items-center gap-2 bg-[#222225]/50 rounded-lg p-1">

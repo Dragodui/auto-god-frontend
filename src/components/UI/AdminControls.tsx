@@ -1,49 +1,97 @@
-import React from 'react';
-import { Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { deletePost, deleteComment, deleteNews } from '@/services/adminService';
+import { toast } from 'react-hot-toast';
+import BanDialog from '../admin/BanDialog';
+import { useAuth } from '@/providers/AuthProvider';
 
 interface AdminControlsProps {
-  type: 'post' | 'comment' | 'news';
-  id: string;
+  itemId: string;
+  itemType: 'post' | 'comment' | 'news' | 'user';
+  banUser?: string;
+  username?: string;
+  isUserIncluded?: boolean;
   onDelete?: () => void;
 }
 
-const AdminControls: React.FC<AdminControlsProps> = ({ type, id, onDelete }) => {
-  const handleDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete this ${type}?`)) {
-      return;
-    }
+const AdminControls: React.FC<AdminControlsProps> = ({
+  itemId,
+  itemType,
+  banUser,
+  username,
+  onDelete,
+  isUserIncluded = false,
+}) => {
+  const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { userId } = useAuth();
+  console.log(userId)
 
+  const handleDelete = async () => {
+    setIsLoading(true);
     try {
-      let success = false;
-      switch (type) {
+      let response;
+      console.log(itemType);
+      switch (itemType) {
         case 'post':
-          success = (await deletePost(id)).success;
+          response = await deletePost(itemId);
           break;
         case 'comment':
-          success = (await deleteComment(id)).success;
+          response = await deleteComment(itemId);
           break;
         case 'news':
-          success = (await deleteNews(id)).success;
+          response = await deleteNews(itemId);
           break;
+        default:
+          throw new Error('Invalid item type');
       }
 
-      if (success && onDelete) {
-        onDelete();
+      if (response.success) {
+        toast.success(`${itemType} deleted successfully`);
+        onDelete?.();
+      } else {
+        throw new Error(response.error);
       }
     } catch (error) {
-      console.error(`Error deleting ${type}:`, error);
+      toast.error(`Failed to delete ${itemType}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handleDelete}
-      className="p-2 text-red-500 hover:text-red-700 transition-colors"
-      title={`Delete ${type}`}
-    >
-      <Trash2 size={20} />
-    </button>
+    <>
+      <div className="flex items-center space-x-2">
+        {isUserIncluded && banUser && username && banUser!== userId && (
+          <button
+            onClick={() => setIsBanDialogOpen(true)}
+            className="text-red-600 hover:text-red-800"
+            disabled={isLoading}
+          >
+            Ban
+          </button>
+        )}
+        <button
+          onClick={handleDelete}
+          className="text-red-600 hover:text-red-800"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Deleting...' : 'Delete'}
+        </button>
+      </div>
+
+      {isBanDialogOpen && banUser && username && (
+        <BanDialog
+          isOpen={isBanDialogOpen}
+          onClose={() => setIsBanDialogOpen(false)}
+          banUser={banUser}
+          username={username}
+          onSuccess={() => {
+            onDelete?.();
+            setIsBanDialogOpen(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 

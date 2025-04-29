@@ -22,6 +22,10 @@ const Header: FC = (): JSX.Element => {
       label: 'News',
       href: '/news',
     },
+    {
+      label: 'Posts',
+      href: '/posts',
+    }
   ];
 
   return (

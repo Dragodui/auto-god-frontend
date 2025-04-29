@@ -145,11 +145,14 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   {formatCommentDate(comment.createdAt)}
                 </span>
               </div>
-              {currentUser?.role === 'mongodb+srv://dragodui:txSiL1GudqZTTc6r@cluster-for-test-app.jnmyg7a.mongodb.net/auto-god' && (
+              {currentUser?.role === 'admin' && (
                 <AdminControls
-                  type="comment"
-                  id={comment._id}
+                  itemType="comment"
+                  itemId={comment._id}
                   onDelete={onRefresh}
+                  isUserIncluded={true} 
+                  userId={comment.authorId} 
+                  username={comment.author?.name}
                 />
               )}
             </div>
