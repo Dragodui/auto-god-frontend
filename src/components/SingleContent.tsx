@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -11,6 +9,8 @@ import { getImage } from "@/utils/getImage"
 import CommentsSection from "@/components/CommentSection"
 import { getCommentsForPost } from "@/services/commentsService"
 import Loader from "@/components/UI/Loader"
+import AdminControls from "@/components/UI/AdminControls"
+import { getCurrentProfileData } from "@/services/userService"
 
 interface SingleContentProps {
   id: string
@@ -43,6 +43,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false)
   const [comments, setComments] = useState<any[]>([])
   const [loadingComments, setLoadingComments] = useState<boolean>(true)
+  const [currentUser, setCurrentUser] = useState<any | null>(null)
 
   const fetchItemData = useCallback(async () => {
     try {
@@ -75,6 +76,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
   useEffect(() => {
     fetchItemData()
     fetchComments()
+    getCurrentUser()
 
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -131,6 +133,11 @@ const SingleContent: React.FC<SingleContentProps> = ({
   const getViewCount = () => {
     if (!item) return 0
     return item.views.length
+  }
+
+  const getCurrentUser = async () => {
+    const user = await getCurrentProfileData()
+    setCurrentUser(user)
   }
 
   if (loading) {
@@ -207,6 +214,23 @@ const SingleContent: React.FC<SingleContentProps> = ({
         </AnimatePresence>
 
         <div className="container mx-auto py-16 px-4 md:px-0">
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              to={backLink}
+              className="flex items-center text-gray-600 hover:text-gray-800"
+            >
+              <ArrowLeft className="mr-2" />
+              {backText}
+            </Link>
+            {currentUser?.role === 'admin' && (
+              <AdminControls
+                type={contentType}
+                id={id}
+                onDelete={() => window.location.href = backLink}
+              />
+            )}
+          </div>
+
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Link to={backLink} className="flex items-center text-gray-400 hover:text-white mb-8">
               <ArrowLeft className="mr-2" size={20} />

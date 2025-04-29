@@ -24,6 +24,7 @@ export interface UserData {
   name: string;
   lastName: string;
   nickname?: string;
+  role: 'user' | 'admin';
 }
 
 export interface User {
@@ -36,6 +37,7 @@ export interface User {
   name: string;
   lastName: string;
   nickname?: string;
+  role: 'user' | 'admin';
 }
 
 export interface ChangeUserData {
