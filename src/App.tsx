@@ -1,4 +1,6 @@
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -16,36 +18,45 @@ import NotFound from './pages/404';
 import SingleNews from './pages/SingleNews';
 import SinglePost from './pages/SinglePost';
 import Posts from './pages/Posts';
+import ItemList from './pages/Market';
+import ItemDetail from './components/ItemDetail';
+import CreateItem from './components/CreateItem';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Header />
-        <Routes>
-          {/* public routes (only if not authenticated) */}
-          <Route element={<PublicRoute />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
-          {/* private routes (only if authenticated) */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/me" element={<Profile />} />
-            <Route path="/create-news" element={<CreateNews />} />
-            <Route path="/create-post" element={<CreatePost />} />
-          </Route>
-          {/* public routes */}
-          <Route path="*" element={<NotFound />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/topics" element={<Topics />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/topics/:topicName" element={<Topic />} />
-          <Route path="/news/:newsId" element={<SingleNews />} />
-          <Route path="/posts/:postId" element={<SinglePost />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <Router>
+          <Header />
+          <Routes>
+            {/* public routes (only if not authenticated) */}
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
+            {/* private routes (only if authenticated) */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/me" element={<Profile />} />
+              <Route path="/create-news" element={<CreateNews />} />
+              <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/create-item" element={<CreateItem />} />
+            </Route>
+            {/* public routes */}
+            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/topics" element={<Topics />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/posts" element={<Posts />} />
+            <Route path="/market" element={<ItemList />} />
+            
+            <Route path="/market/:id" element={<ItemDetail />} />
+            <Route path="/topics/:topicName" element={<Topic />} />
+            <Route path="/news/:newsId" element={<SingleNews />} />
+            <Route path="/posts/:postId" element={<SinglePost />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </Provider>
   );
 }
 

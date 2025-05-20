@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Reply, Send, User, ChevronDown, ChevronUp } from 'lucide-react';
-import { addComment, likeComment } from '@/services/commentsService';
 import { formatDistanceToNow } from 'date-fns';
 import { getImage } from '@/utils/getImage';
-import { getCurrentProfileData } from '@/services/userService';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import {
+  getCommentsForPost,
+  addComment,
+  likeComment,
+} from '@/store/slices/commentsSlice';
+import { getCurrentProfileData } from '@/store/slices/userSlice';
 import AdminControls from '@/components/UI/AdminControls';
 
 interface Author {
@@ -26,31 +32,22 @@ interface CommentType {
 
 interface CommentsSectionProps {
   postId: string;
-  comments: CommentType[];
-  onRefresh: () => void;
 }
 
-const CommentsSection: React.FC<CommentsSectionProps> = ({
-  postId,
-  comments,
-  onRefresh,
-}) => {
-  const [currentUser, setCurrentUser] = useState<any | null>(null);
+const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { comments, loading } = useSelector((state: RootState) => state.comments);
+  const { user: currentUser } = useSelector((state: RootState) => state.user);
   const [commentContent, setCommentContent] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [showAllComments, setShowAllComments] = useState(false);
-  const [expandedReplies, setExpandedReplies] = useState<
-    Record<string, boolean>
-  >({});
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
 
-  const getCurrentUser = async () => {
-    const user = await getCurrentProfileData();
-    setCurrentUser(user);
-  }
+  useEffect(() => {
+    dispatch(getCommentsForPost(postId));
+    dispatch(getCurrentProfileData());
+  }, [dispatch, postId]);
 
   const parentComments = comments.filter((comment) => !comment.replyTo);
   const replyComments = comments.filter((comment) => comment.replyTo);
@@ -77,9 +74,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     if (!commentContent.trim()) return;
 
     try {
-      await addComment(postId, commentContent);
+      await dispatch(addComment({ postId, content: commentContent }));
       setCommentContent('');
-      onRefresh();
     } catch (error) {
       console.error('Error adding comment:', error);
     }
@@ -91,20 +87,18 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     if (!replyContent.trim()) return;
 
     try {
-      await addComment(postId, replyContent, parentId);
+      await dispatch(addComment({ postId, content: replyContent, replyTo: parentId }));
       setReplyContent('');
       setReplyingTo(null);
-      onRefresh();
     } catch (error) {
       console.error('Error adding reply:', error);
     }
   };
 
-  // Like a comment (mock implementation)
+  // Like a comment
   const handleLikeComment = async (commentId: string) => {
     try {
-      await likeComment(commentId);
-      onRefresh();
+      await dispatch(likeComment(commentId));
     } catch (error) {
       console.error('Error liking comment:', error);
     }
@@ -149,9 +143,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 <AdminControls
                   itemType="comment"
                   itemId={comment._id}
-                  onDelete={onRefresh}
-                  isUserIncluded={true} 
-                  userId={comment.authorId} 
+                  onDelete={() => dispatch(getCommentsForPost(postId))}
+                  isUserIncluded={true}
+                  banUser={comment.authorId}
                   username={comment.author?.name}
                 />
               )}
@@ -189,7 +183,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                     className="flex gap-3"
                   >
                     <div className="w-8 h-8 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
-                      <img src={getImage(comment?.author?.avatar as string)} alt="" />
+                      <img src={getImage(currentUser?.avatar as string)} alt="" />
                     </div>
                     <div className="flex-1">
                       <textarea
@@ -231,14 +225,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   {expandedReplies[comment._id] ? (
                     <>
                       <ChevronUp size={16} />
-                      Hide replies (
-                      {getRepliesForComment(comment._id).length})
+                      Hide replies ({getRepliesForComment(comment._id).length})
                     </>
                   ) : (
                     <>
                       <ChevronDown size={16} />
-                      Show replies (
-                      {getRepliesForComment(comment._id).length})
+                      Show replies ({getRepliesForComment(comment._id).length})
                     </>
                   )}
                 </button>
@@ -250,47 +242,57 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="space-y-4"
                     >
                       {getRepliesForComment(comment._id).map((reply) => (
-                        <div key={reply._id} className="flex gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
-                            {reply?.author?.avatar ? (
-                              <img
-                                src={
-                                  getImage(reply?.author?.avatar as string)
-                                }
-                                alt={reply.author.name}
-                                className="w-full h-full rounded-full object-cover"
-                              />
-                            ) : (
-                              <User size={16} />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-semibold">
-                                {reply.author?.name || 'Anonymous'}
-                              </span>
-                              <span className="text-sm text-gray-400">
-                                {formatCommentDate(reply.createdAt)}
-                              </span>
+                        <div key={reply._id} className="mb-4">
+                          <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0">
+                              {reply.author?.avatar ? (
+                                <img
+                                  src={getImage(reply.author.avatar)}
+                                  alt={reply.author.name}
+                                  className="w-8 h-8 rounded-full"
+                                />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                  <User size={16} className="text-gray-500" />
+                                </div>
+                              )}
                             </div>
-                            <p className="text-gray-200 mb-2">
-                              {reply.content}
-                            </p>
-                            <div className="flex gap-4 text-sm text-gray-400">
-                              <button
-                                onClick={() =>
-                                  handleLikeComment(reply._id)
-                                }
-                                className="flex items-center gap-1 hover:text-white transition-colors"
-                              >
-                                <Heart size={14} />
-                                {reply.likes > 0 && (
-                                  <span>{reply.likes}</span>
+                            <div className="flex-grow">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="font-semibold">
+                                    {reply.author?.name || 'Anonymous'}
+                                  </span>
+                                  <span className="text-gray-500 text-sm ml-2">
+                                    {formatCommentDate(reply.createdAt)}
+                                  </span>
+                                </div>
+                                {currentUser?.role === 'admin' && (
+                                  <AdminControls
+                                    itemType="comment"
+                                    itemId={reply._id}
+                                    onDelete={() => dispatch(getCommentsForPost(postId))}
+                                    isUserIncluded={true}
+                                    banUser={reply.authorId}
+                                    username={reply.author?.name}
+                                  />
                                 )}
-                              </button>
+                              </div>
+                              <p className="mt-1">{reply.content}</p>
+                              <div className="flex items-center gap-4 mt-2">
+                                <button
+                                  onClick={() => handleLikeComment(reply._id)}
+                                  className="flex items-center gap-1 text-gray-500 hover:text-red-500"
+                                >
+                                  <Heart
+                                    size={16}
+                                    className={reply.likes?.length > 0 ? 'fill-current' : ''}
+                                  />
+                                  <span>{reply.likes?.length}</span>
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -307,27 +309,28 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-[#2A2A35] p-6 rounded-xl"
-    >
-      <h2 className="text-2xl font-bold mb-6 font-sansation">
-        Comments ({comments.length})
-      </h2>
+    <div className="mt-8">
+      <h2 className="text-2xl font-bold mb-6">Comments</h2>
 
       {/* Comment Form */}
       <form onSubmit={handleSubmitComment} className="mb-8">
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <div className="w-10 h-10 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
-            <img className='w-full h-full rounded-full' src={getImage(currentUser?.avatar as  string)} alt="User" />
+            {currentUser?.avatar ? (
+              <img
+                src={getImage(currentUser.avatar)}
+                alt={currentUser.name}
+                className="w-full h-full rounded-full"
+              />
+            ) : (
+              <User size={20} className="text-gray-500" />
+            )}
           </div>
           <div className="flex-1">
             <textarea
               value={commentContent}
               onChange={(e) => setCommentContent(e.target.value)}
-              placeholder="Add a comment..."
+              placeholder="Write a comment..."
               className="w-full bg-[#32323E] rounded-lg p-3 text-white resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-[#4A4A5A]"
             />
             <div className="flex justify-end mt-2">
@@ -337,7 +340,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={16} />
-                Comment
+                Post Comment
               </button>
             </div>
           </div>
@@ -345,38 +348,22 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       </form>
 
       {/* Comments List */}
-      {displayedComments.length > 0 ? (
-        <div className="space-y-6">
-          {displayedComments.map((comment) => renderComment(comment))}
-        </div>
+      {loading ? (
+        <div className="text-center py-4">Loading comments...</div>
       ) : (
-        <div className="text-center py-8 text-gray-400">
-          No comments yet. Be the first to comment!
-        </div>
+        <>
+          {displayedComments.map(renderComment)}
+          {parentComments.length > 3 && (
+            <button
+              onClick={() => setShowAllComments(!showAllComments)}
+              className="text-blue-500 hover:text-blue-600 mt-4"
+            >
+              {showAllComments ? 'Show less' : 'Show more comments'}
+            </button>
+          )}
+        </>
       )}
-
-      {/* Show More Comments Button */}
-      {parentComments.length > 3 && (
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => setShowAllComments(!showAllComments)}
-            className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-2"
-          >
-            {showAllComments ? (
-              <>
-                <ChevronUp size={18} />
-                Show Less
-              </>
-            ) : (
-              <>
-                <ChevronDown size={18} />
-                Show All Comments ({parentComments.length})
-              </>
-            )}
-          </button>
-        </div>
-      )}
-    </motion.div>
+    </div>
   );
 };
 

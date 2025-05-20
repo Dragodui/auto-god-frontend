@@ -24,13 +24,11 @@ const AdminControls: React.FC<AdminControlsProps> = ({
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { userId } = useAuth();
-  console.log(userId)
 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
       let response;
-      console.log(itemType);
       switch (itemType) {
         case 'post':
           response = await deletePost(itemId);
