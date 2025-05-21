@@ -22,12 +22,12 @@ export const fetchChat = (itemId: string) => async (dispatch: Dispatch) => {
     const response = await api.get(`/chat/item/${itemId}`);
     dispatch({
       type: FETCH_CHAT_SUCCESS,
-      payload: response.data
+      payload: response.data,
     });
   } catch (error) {
     dispatch({
       type: FETCH_CHAT_FAILURE,
-      payload: error.response?.data?.message || 'Error fetching chat'
+      payload: error.response?.data?.message || 'Error fetching chat',
     });
   }
 };
@@ -39,34 +39,35 @@ export const createChat = (itemId: string) => async (dispatch: Dispatch) => {
     const response = await api.post(`/chat/item/${itemId}`);
     dispatch({
       type: CREATE_CHAT_SUCCESS,
-      payload: response.data
+      payload: response.data,
     });
   } catch (error) {
     dispatch({
       type: CREATE_CHAT_FAILURE,
-      payload: error.response?.data?.message || 'Error creating chat'
+      payload: error.response?.data?.message || 'Error creating chat',
     });
   }
 };
 
-export const sendMessage = (chatId: string, message: Message) => async (dispatch: Dispatch) => {
-  dispatch({ type: SEND_MESSAGE_REQUEST });
+export const sendMessage =
+  (chatId: string, message: Message) => async (dispatch: Dispatch) => {
+    dispatch({ type: SEND_MESSAGE_REQUEST });
 
-  try {
-    const response = await api.post(`/chat/${chatId}/messages`, message);
-    dispatch({
-      type: SEND_MESSAGE_SUCCESS,
-      payload: response.data
-    });
-  } catch (error) {
-    dispatch({
-      type: SEND_MESSAGE_FAILURE,
-      payload: error.response?.data?.message || 'Error sending message'
-    });
-  }
-};
+    try {
+      const response = await api.post(`/chat/${chatId}/messages`, message);
+      dispatch({
+        type: SEND_MESSAGE_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: SEND_MESSAGE_FAILURE,
+        payload: error.response?.data?.message || 'Error sending message',
+      });
+    }
+  };
 
 export const addMessage = (message: Message) => ({
   type: ADD_MESSAGE,
-  payload: message
-}); 
+  payload: message,
+});

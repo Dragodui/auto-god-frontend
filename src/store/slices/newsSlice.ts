@@ -206,4 +206,4 @@ const newsSlice = createSlice({
 });
 
 export default newsSlice.reducer;
-export const { clearError, clearCurrentNews } = newsSlice.actions; 
+export const { clearError, clearCurrentNews } = newsSlice.actions;

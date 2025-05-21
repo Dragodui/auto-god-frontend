@@ -10,7 +10,7 @@ import {
   CREATE_ITEM_FAILURE,
   PURCHASE_ITEM_REQUEST,
   PURCHASE_ITEM_SUCCESS,
-  PURCHASE_ITEM_FAILURE
+  PURCHASE_ITEM_FAILURE,
 } from '../actions/itemActions';
 import { ItemState } from '../../types';
 
@@ -19,7 +19,7 @@ const initialState: ItemState = {
   currentItem: null,
   userItems: [],
   loading: false,
-  error: null
+  error: null,
 };
 
 const itemReducer = (state = initialState, action: any): ItemState => {
@@ -31,38 +31,38 @@ const itemReducer = (state = initialState, action: any): ItemState => {
       return {
         ...state,
         loading: true,
-        error: null
+        error: null,
       };
 
     case FETCH_ITEMS_SUCCESS:
       return {
         ...state,
         loading: false,
-        items: action.payload
+        items: action.payload,
       };
 
     case FETCH_ITEM_SUCCESS:
       return {
         ...state,
         loading: false,
-        currentItem: action.payload
+        currentItem: action.payload,
       };
 
     case CREATE_ITEM_SUCCESS:
       return {
         ...state,
         loading: false,
-        items: [action.payload, ...state.items]
+        items: [action.payload, ...state.items],
       };
 
     case PURCHASE_ITEM_SUCCESS:
       return {
         ...state,
         loading: false,
-        items: state.items.map(item =>
+        items: state.items.map((item) =>
           item._id === action.payload._id ? action.payload : item
         ),
-        currentItem: action.payload
+        currentItem: action.payload,
       };
 
     case FETCH_ITEMS_FAILURE:
@@ -72,7 +72,7 @@ const itemReducer = (state = initialState, action: any): ItemState => {
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
 
     default:
@@ -80,4 +80,4 @@ const itemReducer = (state = initialState, action: any): ItemState => {
   }
 };
 
-export default itemReducer; 
+export default itemReducer;

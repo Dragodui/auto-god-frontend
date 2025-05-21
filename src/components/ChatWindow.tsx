@@ -17,25 +17,29 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ itemId, onClose }) => {
   const [message, setMessage] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  const { currentChat, loading, error } = useSelector((state: RootState) => state.chat);
-  const {userId} = useAuth();
 
-  // useEffect(() => {
-  //   dispatch(fetchChat(itemId));
+  const { currentChat, loading, error } = useSelector(
+    (state: RootState) => state.chat
+  );
+  const { userId } = useAuth();
 
-  //   const newSocket = io(import.meta.env.VITE_SERVER_HOST || 'http://localhost:8000');
-  //   setSocket(newSocket);
+  useEffect(() => {
+    dispatch(fetchChat(itemId));
 
-  //   return () => {
-  //     newSocket.close();
-  //   };
-  // }, [dispatch, itemId]);
+    const newSocket = io(
+      import.meta.env.VITE_SERVER_HOST || 'http://localhost:8000'
+    );
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.close();
+    };
+  }, [dispatch, itemId]);
 
   useEffect(() => {
     if (socket && currentChat) {
       socket.emit('join-chat', currentChat._id);
-      
+
       socket.on('receive-message', (message: Message) => {
         dispatch({ type: 'ADD_MESSAGE', payload: message });
       });
@@ -52,7 +56,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ itemId, onClose }) => {
     const newMessage = {
       content: message,
       sender: userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     dispatch(sendMessage(currentChat._id, newMessage));
@@ -60,11 +64,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ itemId, onClose }) => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-full">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-full">Loading...</div>
+    );
   }
 
   if (error || !currentChat) {
-    return <div className="text-red-500 text-center p-4">{error || 'Chat not found'}</div>;
+    return (
+      <div className="text-red-500 text-center p-4">
+        {error || 'Chat not found'}
+      </div>
+    );
   }
 
   return (
@@ -99,7 +109,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ itemId, onClose }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={(e) => handleSendMessage(e)} className="p-4 border-t bg-bg">
+      <form
+        onSubmit={(e) => handleSendMessage(e)}
+        className="p-4 border-t bg-bg"
+      >
         <div className="flex space-x-2">
           <input
             type="text"
@@ -120,4 +133,4 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ itemId, onClose }) => {
   );
 };
 
-export default ChatWindow; 
+export default ChatWindow;

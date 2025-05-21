@@ -24,7 +24,7 @@ const BanManagement: React.FC = () => {
   const [banForm, setBanForm] = useState({
     userId: '',
     reason: '',
-    duration: ''
+    duration: '',
   });
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const BanManagement: React.FC = () => {
       const response = await banUser({
         userId: banForm.userId,
         reason: banForm.reason,
-        duration: banForm.duration ? parseInt(banForm.duration) : undefined
+        duration: banForm.duration ? parseInt(banForm.duration) : undefined,
       });
 
       if (response.success) {
@@ -89,20 +89,28 @@ const BanManagement: React.FC = () => {
         <h2 className="text-xl font-bold mb-4">Ban User</h2>
         <form onSubmit={handleBanSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">User ID</label>
+            <label className="block text-sm font-medium text-gray-700">
+              User ID
+            </label>
             <input
               type="text"
               value={banForm.userId}
-              onChange={(e) => setBanForm({ ...banForm, userId: e.target.value })}
+              onChange={(e) =>
+                setBanForm({ ...banForm, userId: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Reason</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Reason
+            </label>
             <textarea
               value={banForm.reason}
-              onChange={(e) => setBanForm({ ...banForm, reason: e.target.value })}
+              onChange={(e) =>
+                setBanForm({ ...banForm, reason: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               rows={3}
               required
@@ -115,7 +123,9 @@ const BanManagement: React.FC = () => {
             <input
               type="number"
               value={banForm.duration}
-              onChange={(e) => setBanForm({ ...banForm, duration: e.target.value })}
+              onChange={(e) =>
+                setBanForm({ ...banForm, duration: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               min="1"
             />
@@ -162,10 +172,14 @@ const BanManagement: React.FC = () => {
                     <div className="text-sm font-medium text-gray-900">
                       {ban.userId.username}
                     </div>
-                    <div className="text-sm text-gray-500">{ban.userId.email}</div>
+                    <div className="text-sm text-gray-500">
+                      {ban.userId.email}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{ban.adminId.username}</div>
+                    <div className="text-sm text-gray-900">
+                      {ban.adminId.username}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-gray-900">{ban.reason}</div>
@@ -200,4 +214,4 @@ const BanManagement: React.FC = () => {
   );
 };
 
-export default BanManagement; 
+export default BanManagement;

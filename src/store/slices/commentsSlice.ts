@@ -152,4 +152,4 @@ const commentsSlice = createSlice({
 });
 
 export default commentsSlice.reducer;
-export const { clearError, clearComments } = commentsSlice.actions; 
+export const { clearError, clearComments } = commentsSlice.actions;

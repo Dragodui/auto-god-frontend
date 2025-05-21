@@ -5,7 +5,7 @@ const initialState: AuthState = {
   token: null,
   isAuthenticated: false,
   loading: false,
-  error: null
+  error: null,
 };
 
 const authReducer = (state = initialState, action: any) => {
@@ -21,14 +21,14 @@ const authReducer = (state = initialState, action: any) => {
         token: action.payload.token,
         isAuthenticated: true,
         loading: false,
-        error: null
+        error: null,
       };
     case 'LOGIN_FAILURE':
     case 'REGISTER_FAILURE':
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
     case 'LOGOUT':
       return initialState;
@@ -37,4 +37,4 @@ const authReducer = (state = initialState, action: any) => {
   }
 };
 
-export default authReducer; 
+export default authReducer;

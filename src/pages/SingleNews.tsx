@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { useParams } from "react-router-dom"
-import { useAuth } from "@/providers/AuthProvider"
-import SingleContent from "@/components/SingleContent"
-import { getOneNews, likeNews, viewNews } from "@/services/newsService"
+import { useParams } from 'react-router-dom';
+import { useAuth } from '@/providers/AuthProvider';
+import SingleContent from '@/components/SingleContent';
+import { getOneNews, likeNews, viewNews } from '@/services/newsService';
 
 const SingleNews = () => {
-  const { newsId } = useParams()
-  const { userId } = useAuth()
+  const { newsId } = useParams();
+  const { userId } = useAuth();
 
   return (
     <SingleContent
@@ -22,8 +22,7 @@ const SingleNews = () => {
       moreText="More News"
       userId={userId}
     />
-  )
-}
+  );
+};
 
-export default SingleNews
-
+export default SingleNews;

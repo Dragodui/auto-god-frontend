@@ -25,22 +25,25 @@ const News: React.FC = () => {
       ) : (
         <div className="min-h-screen bg-[#222225] text-white w-full">
           <section className="container mx-auto py-16">
-         <div className='flex justify-between items-center'>
-         <motion.h2
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="text-5xl font-bold mb-8"
-            >
-              News
-            </motion.h2>
-          <div>
-            <Link to="/create-news" className=" text-white px-4 py-2 rounded-md">
-              Create news
-            </Link>
-          </div>
-         </div>
-           
+            <div className="flex justify-between items-center">
+              <motion.h2
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="text-5xl font-bold mb-8"
+              >
+                News
+              </motion.h2>
+              <div>
+                <Link
+                  to="/create-news"
+                  className=" text-white px-4 py-2 rounded-md"
+                >
+                  Create news
+                </Link>
+              </div>
+            </div>
+
             {news && news.length > 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}

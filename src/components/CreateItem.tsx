@@ -13,35 +13,37 @@ const CreateItem: React.FC = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    price: ''
+    price: '',
   });
   const [photos, setPhotos] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newPhotos = Array.from(e.target.files);
-      setPhotos(prev => [...prev, ...newPhotos]);
+      setPhotos((prev) => [...prev, ...newPhotos]);
 
       // Create preview URLs
-      const newPreviewUrls = newPhotos.map(file => URL.createObjectURL(file));
-      setPreviewUrls(prev => [...prev, ...newPreviewUrls]);
+      const newPreviewUrls = newPhotos.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
     }
   };
 
   const removePhoto = (index: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index));
-    setPreviewUrls(prev => {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setPreviewUrls((prev) => {
       URL.revokeObjectURL(prev[index]);
       return prev.filter((_, i) => i !== index);
     });
@@ -57,7 +59,7 @@ const CreateItem: React.FC = () => {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('price', formData.price);
-      photos.forEach(photo => {
+      photos.forEach((photo) => {
         formDataToSend.append('photos', photo);
       });
 
@@ -83,7 +85,10 @@ const CreateItem: React.FC = () => {
         )}
 
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-white mb-1">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-white mb-1"
+          >
             Title
           </label>
           <Input
@@ -98,7 +103,10 @@ const CreateItem: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-white mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-white mb-1"
+          >
             Description
           </label>
           <textarea
@@ -113,7 +121,10 @@ const CreateItem: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="price" className="block text-sm font-medium text-white mb-1">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-white mb-1"
+          >
             Price ($)
           </label>
           <Input
@@ -170,8 +181,7 @@ const CreateItem: React.FC = () => {
         <Button
           type="submit"
           disabled={loading || photos.length === 0}
-          addStyles="w-full"  
-          
+          addStyles="w-full"
         >
           {loading ? 'Creating...' : 'List Item'}
         </Button>
@@ -180,4 +190,4 @@ const CreateItem: React.FC = () => {
   );
 };
 
-export default CreateItem; 
+export default CreateItem;

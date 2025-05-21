@@ -59,7 +59,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({
   return (
     <>
       <div className="flex items-center space-x-2">
-        {isUserIncluded && banUser && username && banUser!== userId && (
+        {isUserIncluded && banUser && username && banUser !== userId && (
           <button
             onClick={() => setIsBanDialogOpen(true)}
             className="text-red-600 hover:text-red-800"
@@ -93,4 +93,4 @@ const AdminControls: React.FC<AdminControlsProps> = ({
   );
 };
 
-export default AdminControls; 
+export default AdminControls;

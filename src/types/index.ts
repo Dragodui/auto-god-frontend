@@ -53,4 +53,4 @@ export interface ChatState {
   currentChat: Chat | null;
   loading: boolean;
   error: string | null;
-} 
+}

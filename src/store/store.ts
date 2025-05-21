@@ -3,6 +3,8 @@ import userReducer from './slices/userSlice';
 import postsReducer from './slices/postsSlice';
 import commentsReducer from './slices/commentsSlice';
 import newsReducer from './slices/newsSlice';
+import chatsReducer from './slices/chatsSlice';
+import itemsReducer from './slices/itemsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     posts: postsReducer,
     comments: commentsReducer,
     news: newsReducer,
+    chats: chatsReducer,
+    items: itemsReducer,
   },
 });
 

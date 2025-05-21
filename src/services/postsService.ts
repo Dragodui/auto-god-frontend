@@ -44,4 +44,4 @@ export const viewPost = async (postId: string) => {
 export const getPosts = async () => {
   const response = await api.get('/posts');
   return response.data;
-}
+};

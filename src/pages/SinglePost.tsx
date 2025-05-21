@@ -1,11 +1,11 @@
-import { useParams } from "react-router-dom"
-import { useAuth } from "@/providers/AuthProvider"
-import SingleContent from "@/components/SingleContent"
-import { getPost, likePost, viewPost } from "@/services/postsService"
+import { useParams } from 'react-router-dom';
+import { useAuth } from '@/providers/AuthProvider';
+import SingleContent from '@/components/SingleContent';
+import { getPost, likePost, viewPost } from '@/services/postsService';
 
 const SinglePost = () => {
-  const { postId } = useParams()
-  const { userId } = useAuth()
+  const { postId } = useParams();
+  const { userId } = useAuth();
 
   return (
     <SingleContent
@@ -20,8 +20,7 @@ const SinglePost = () => {
       moreText="More Posts"
       userId={userId}
     />
-  )
-}
+  );
+};
 
-export default SinglePost
-
+export default SinglePost;

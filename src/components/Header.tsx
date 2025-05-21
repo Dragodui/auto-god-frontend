@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Wrapper from './Wrapper';
 import Button from './UI/Button';
 import { useAuth } from '@/providers/AuthProvider';
@@ -6,9 +6,12 @@ import { logout } from '@/services/authService';
 import { Link } from 'react-router-dom';
 import { CircleUser, CircleUserRound, User } from 'lucide-react';
 import { FallingMenu } from './UI/FallingMenu';
+import { getForumTopics } from '@/services/topicService';
+import { Topic } from '@/types';
 
 const Header: FC = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
+  const [topics, setTopics] = useState<{ label: string; href: string }[]>([]);
   const fallingMenuPages = [
     {
       label: 'Home',
@@ -27,10 +30,27 @@ const Header: FC = (): JSX.Element => {
       href: '/posts',
     },
     {
-      label: "Market",
-      href: '/market'
-    }
+      label: 'Market',
+      href: '/market',
+    },
   ];
+
+  const fetchTopics = async () => {
+    try {
+      const fetchedTopics = await getForumTopics();
+      setTopics(
+        (fetchedTopics as Topic[]).map((topic) => ({
+          label: topic.title,
+          href: `/topics/${topic.title}`,
+        }))
+      );
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+    }
+  };
+  useEffect(() => {
+    fetchTopics();
+  }, []);
 
   return (
     <header className="font-sansation py-[20px]">
@@ -44,6 +64,7 @@ const Header: FC = (): JSX.Element => {
           </Link>
           <nav className="flex gap-5 items-center">
             <FallingMenu label="Navigation" items={fallingMenuPages} />
+            <FallingMenu label="Topics" items={topics} />
             {isAuthenticated ? (
               <>
                 <Link to="/me" className="text-white hover:text-white">

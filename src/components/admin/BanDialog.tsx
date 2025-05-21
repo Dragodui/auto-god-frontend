@@ -109,4 +109,4 @@ const BanDialog: React.FC<BanDialogProps> = ({
   );
 };
 
-export default BanDialog; 
+export default BanDialog;

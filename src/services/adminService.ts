@@ -38,4 +38,4 @@ export const getBannedUsers = async () => {
     console.error('Error fetching banned users:', error);
     return { success: false, error };
   }
-}; 
+};

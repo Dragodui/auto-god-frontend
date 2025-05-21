@@ -1,7 +1,9 @@
 import api from '@/utils/api';
 import { Comment } from '@/types';
 
-export const getCommentsForPost = async (postId: string): Promise<Comment[]> => {
+export const getCommentsForPost = async (
+  postId: string
+): Promise<Comment[]> => {
   try {
     const response = await api.get(`/comments/${postId}`);
     return response.data;
@@ -29,7 +31,9 @@ export const addComment = async (
   }
 };
 
-export const likeComment = async (commentId: string): Promise<{ success: boolean; error?: any }> => {
+export const likeComment = async (
+  commentId: string
+): Promise<{ success: boolean; error?: any }> => {
   try {
     const response = await api.put(`/comments/like/${commentId}`);
     return { success: true, ...response.data };
@@ -39,7 +43,9 @@ export const likeComment = async (commentId: string): Promise<{ success: boolean
   }
 };
 
-export const deleteComment = async (commentId: string): Promise<{ success: boolean; error?: any }> => {
+export const deleteComment = async (
+  commentId: string
+): Promise<{ success: boolean; error?: any }> => {
   try {
     const response = await api.delete(`/admin/comments/${commentId}`);
     return { success: true, ...response.data };

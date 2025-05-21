@@ -7,11 +7,11 @@ const store = configureStore({
   reducer: {
     items: itemReducer,
     chat: chatReducer,
-    auth: authReducer
-  }
+    auth: authReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export default store; 
+export default store;

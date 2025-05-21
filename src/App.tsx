@@ -1,6 +1,6 @@
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './store';
+import { store } from './store/store';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -21,6 +21,7 @@ import Posts from './pages/Posts';
 import ItemList from './pages/Market';
 import ItemDetail from './components/ItemDetail';
 import CreateItem from './components/CreateItem';
+import ChatsPage from './pages/ChatsPage';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/create-item" element={<CreateItem />} />
+              <Route path="/market/chats" element={<ChatsPage />} />
             </Route>
             {/* public routes */}
             <Route path="*" element={<NotFound />} />
@@ -48,7 +50,7 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/posts" element={<Posts />} />
             <Route path="/market" element={<ItemList />} />
-            
+
             <Route path="/market/:id" element={<ItemDetail />} />
             <Route path="/topics/:topicName" element={<Topic />} />
             <Route path="/news/:newsId" element={<SingleNews />} />

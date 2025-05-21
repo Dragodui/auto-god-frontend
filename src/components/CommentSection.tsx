@@ -36,13 +36,17 @@ interface CommentsSectionProps {
 
 const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { comments, loading } = useSelector((state: RootState) => state.comments);
+  const { comments, loading } = useSelector(
+    (state: RootState) => state.comments
+  );
   const { user: currentUser } = useSelector((state: RootState) => state.user);
   const [commentContent, setCommentContent] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [showAllComments, setShowAllComments] = useState(false);
-  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
+  const [expandedReplies, setExpandedReplies] = useState<
+    Record<string, boolean>
+  >({});
 
   useEffect(() => {
     dispatch(getCommentsForPost(postId));
@@ -87,7 +91,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
     if (!replyContent.trim()) return;
 
     try {
-      await dispatch(addComment({ postId, content: replyContent, replyTo: parentId }));
+      await dispatch(
+        addComment({ postId, content: replyContent, replyTo: parentId })
+      );
       setReplyContent('');
       setReplyingTo(null);
     } catch (error) {
@@ -134,7 +140,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
           <div className="flex-grow">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-semibold">{comment.author?.name || 'Anonymous'}</span>
+                <span className="font-semibold">
+                  {comment.author?.name || 'Anonymous'}
+                </span>
                 <span className="text-gray-500 text-sm ml-2">
                   {formatCommentDate(comment.createdAt)}
                 </span>
@@ -156,7 +164,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
                 onClick={() => handleLikeComment(comment._id)}
                 className="flex items-center gap-1 text-gray-500 hover:text-red-500"
               >
-                <Heart size={16} className={comment.likes?.length > 0 ? 'fill-current' : ''} />
+                <Heart
+                  size={16}
+                  className={comment.likes?.length > 0 ? 'fill-current' : ''}
+                />
                 <span>{comment.likes?.length}</span>
               </button>
               <button
@@ -183,7 +194,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
                     className="flex gap-3"
                   >
                     <div className="w-8 h-8 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
-                      <img src={getImage(currentUser?.avatar as string)} alt="" />
+                      <img
+                        src={getImage(currentUser?.avatar as string)}
+                        alt=""
+                      />
                     </div>
                     <div className="flex-1">
                       <textarea
@@ -273,7 +287,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
                                   <AdminControls
                                     itemType="comment"
                                     itemId={reply._id}
-                                    onDelete={() => dispatch(getCommentsForPost(postId))}
+                                    onDelete={() =>
+                                      dispatch(getCommentsForPost(postId))
+                                    }
                                     isUserIncluded={true}
                                     banUser={reply.authorId}
                                     username={reply.author?.name}
@@ -288,7 +304,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
                                 >
                                   <Heart
                                     size={16}
-                                    className={reply.likes?.length > 0 ? 'fill-current' : ''}
+                                    className={
+                                      reply.likes?.length > 0
+                                        ? 'fill-current'
+                                        : ''
+                                    }
                                   />
                                   <span>{reply.likes?.length}</span>
                                 </button>

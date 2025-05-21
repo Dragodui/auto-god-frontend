@@ -8,7 +8,7 @@ import {
   SEND_MESSAGE_REQUEST,
   SEND_MESSAGE_SUCCESS,
   SEND_MESSAGE_FAILURE,
-  ADD_MESSAGE
+  ADD_MESSAGE,
 } from '../actions/chatActions';
 import { ChatState } from '../../types/index';
 
@@ -16,7 +16,7 @@ const initialState: ChatState = {
   chats: [],
   currentChat: null,
   loading: false,
-  error: null
+  error: null,
 };
 
 const chatReducer = (state = initialState, action: any): ChatState => {
@@ -27,14 +27,14 @@ const chatReducer = (state = initialState, action: any): ChatState => {
       return {
         ...state,
         loading: true,
-        error: null
+        error: null,
       };
 
     case FETCH_CHAT_SUCCESS:
       return {
         ...state,
         loading: false,
-        currentChat: action.payload
+        currentChat: action.payload,
       };
 
     case CREATE_CHAT_SUCCESS:
@@ -42,7 +42,7 @@ const chatReducer = (state = initialState, action: any): ChatState => {
         ...state,
         loading: false,
         currentChat: action.payload,
-        chats: [action.payload, ...state.chats]
+        chats: [action.payload, ...state.chats],
       };
 
     case SEND_MESSAGE_SUCCESS:
@@ -52,9 +52,9 @@ const chatReducer = (state = initialState, action: any): ChatState => {
         currentChat: state.currentChat
           ? {
               ...state.currentChat,
-              messages: [...state.currentChat.messages, action.payload]
+              messages: [...state.currentChat.messages, action.payload],
             }
-          : null
+          : null,
       };
 
     case ADD_MESSAGE:
@@ -63,9 +63,9 @@ const chatReducer = (state = initialState, action: any): ChatState => {
         currentChat: state.currentChat
           ? {
               ...state.currentChat,
-              messages: [...state.currentChat.messages, action.payload]
+              messages: [...state.currentChat.messages, action.payload],
             }
-          : null
+          : null,
       };
 
     case FETCH_CHAT_FAILURE:
@@ -74,7 +74,7 @@ const chatReducer = (state = initialState, action: any): ChatState => {
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
 
     default:
@@ -82,4 +82,4 @@ const chatReducer = (state = initialState, action: any): ChatState => {
   }
 };
 
-export default chatReducer; 
+export default chatReducer;

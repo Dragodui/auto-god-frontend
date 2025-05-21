@@ -202,4 +202,4 @@ const postsSlice = createSlice({
 });
 
 export default postsSlice.reducer;
-export const { clearError, clearCurrentPost } = postsSlice.actions; 
+export const { clearError, clearCurrentPost } = postsSlice.actions;
