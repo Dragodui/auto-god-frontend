@@ -53,6 +53,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
     dispatch(getCurrentProfileData());
   }, [dispatch, postId]);
 
+  console.log(comments)
   const parentComments = comments.filter((comment) => !comment.replyTo);
   const replyComments = comments.filter((comment) => comment.replyTo);
 
@@ -79,6 +80,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
 
     try {
       await dispatch(addComment({ postId, content: commentContent }));
+      await dispatch(getCommentsForPost(postId));
       setCommentContent('');
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -94,6 +96,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
       await dispatch(
         addComment({ postId, content: replyContent, replyTo: parentId })
       );
+      
+      await dispatch(getCommentsForPost(postId));
       setReplyContent('');
       setReplyingTo(null);
     } catch (error) {
@@ -112,6 +116,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
 
   // Format date
   const formatCommentDate = (date: Date) => {
+    console.log(date)
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   };
 

@@ -63,7 +63,6 @@ const ChatsPage: React.FC = () => {
 
   const getOtherParticipant = (chat: typeof currentChat) => {
     if (!chat || !currentUser) return null;
-    console.log(chat.participants.find((p) => p._id !== currentUser._id));
     return chat.participants.find((p) => p._id !== currentUser._id);
   };
 

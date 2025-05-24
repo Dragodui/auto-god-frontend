@@ -50,7 +50,7 @@ const Posts: React.FC = () => {
                 transition={{ staggerChildren: 0.2, delayChildren: 0.3 }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sansation"
               >
-                {posts.slice(0, 6).map((topic, index) => (
+                {posts.map((topic, index) => (
                   <motion.div
                     key={topic._id}
                     initial={{ opacity: 0, y: 20 }}

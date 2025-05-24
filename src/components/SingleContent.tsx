@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -25,6 +25,8 @@ import { getCurrentProfileData } from '@/store/slices/userSlice';
 import { getPost, likePost, viewPost } from '@/store/slices/postsSlice';
 import Loader from '@/components/UI/Loader';
 import AdminControls from '@/components/UI/AdminControls';
+import { useAuth } from '@/providers/AuthProvider';
+import { getOneNews, likeNews, viewNews } from '@/store/slices/newsSlice';
 
 interface SingleContentProps {
   id: string;
@@ -40,19 +42,24 @@ const SingleContent: React.FC<SingleContentProps> = ({
   contentType,
   backLink,
   backText,
-  moreLink,
-  moreText,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { currentPost: item, loading } = useSelector(
-    (state: RootState) => state.posts
-  );
+  const item = useSelector((state: RootState) => contentType === 'post' ? state.posts.currentPost : state.news.currentNews);
+  const loading = useSelector((state: RootState) => contentType === 'post' ? state.posts.loading : state.news.loading);
   const { user: currentUser } = useSelector((state: RootState) => state.user);
+  const {userId} = useAuth();
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
-      dispatch(getPost(id));
+      switch (contentType) {
+        case 'post':
+          dispatch(getPost(id));
+          break;
+        case 'news':
+          dispatch(getOneNews(id));
+          break;
+      }
       dispatch(getCommentsForPost(id));
       dispatch(getCurrentProfileData());
     }
@@ -60,13 +67,14 @@ const SingleContent: React.FC<SingleContentProps> = ({
 
   useEffect(() => {
     if (id) {
-      dispatch(viewPost(id));
+      dispatch(viewNews(id));
     }
-  }, [dispatch, id]);
+  }, []);
 
   const handleLike = async () => {
     try {
-      await dispatch(likePost(id));
+      await dispatch(likeNews(id));
+      await dispatch(getOneNews(id));
     } catch (error) {
       console.error(`Error liking ${contentType}:`, error);
     }
@@ -85,12 +93,12 @@ const SingleContent: React.FC<SingleContentProps> = ({
   };
 
   const isLiked = () => {
-    if (!item || !currentUser) return false;
-    return item.likes.includes(currentUser._id);
+    if (!item || !userId) return false;
+    return item.likes?.includes(userId);
   };
 
   const getViewCount = () => {
-    if (!item) return 0;
+    if (!item || item.views === undefined) return 0;
     return item.views.length;
   };
 
@@ -167,11 +175,12 @@ const SingleContent: React.FC<SingleContentProps> = ({
                 className="relative max-w-full max-h-full"
                 onClick={(e) => e.stopPropagation()}
               >
-                <img
+                   <img
                   src={getImage(item.image) || '/placeholder.svg'}
                   alt={item.title}
                   className="max-w-full max-h-[90vh] object-contain rounded-lg"
                 />
+
               </motion.div>
             </motion.div>
           )}
@@ -212,6 +221,9 @@ const SingleContent: React.FC<SingleContentProps> = ({
             <div className="w-full rounded-xl overflow-hidden relative mb-8">
               <div className="relative">
                 {/* Main Image Container */}
+                 {
+              item.image && item.image !== 'undefined' && (
+
                 <div
                   className="relative group cursor-pointer"
                   onClick={toggleFullscreenImage}
@@ -225,6 +237,8 @@ const SingleContent: React.FC<SingleContentProps> = ({
                     <ZoomIn size={32} className="text-white" />
                   </div>
                 </div>
+                              )
+             }
               </div>
             </div>
 

@@ -29,7 +29,7 @@ export function FallingMenu({ label, items }: FallingMenuProps) {
   }, []);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative z-[100]" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="inline-flex items-center gap-1 rounded-lg bg-bg px-4 py-2 text-sm font-medium text-text shadow-sm transition-all focus:outline-none"

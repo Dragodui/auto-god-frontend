@@ -8,8 +8,8 @@ interface Post {
   tags: string[];
   topicId: string;
   image?: string;
-  likes: number;
-  views: number;
+  likes: string[];
+  views: string[];
   author: any;
   createdAt: string;
   updatedAt: string;

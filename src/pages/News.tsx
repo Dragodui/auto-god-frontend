@@ -3,7 +3,7 @@ import Wrapper from '../components/Wrapper';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getNews } from '@/services/newsService';
-import { Loader } from 'lucide-react';
+import { Loader, Eye } from 'lucide-react';
 
 const News: React.FC = () => {
   const [news, setNews] = React.useState<any[] | null>(null);
@@ -17,6 +17,7 @@ const News: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
+  console.log(news)
 
   return (
     <Wrapper>
@@ -51,7 +52,7 @@ const News: React.FC = () => {
                 transition={{ staggerChildren: 0.2, delayChildren: 0.3 }}
                 className="grid grid-cols-2 md:grid-cols-3 gap-4 font-sansation"
               >
-                {news.slice(0, 6).map((topic, index) => (
+                {news.map((topic, index) => (
                   <motion.div
                     key={topic._id}
                     initial={{ opacity: 0, y: 20 }}
@@ -69,10 +70,14 @@ const News: React.FC = () => {
                       }}
                     >
                       <div className="absolute inset-0 bg-black/40"></div>
-                      <div className="relative z-10 flex items-center gap-3">
+                      <div className="relative z-10 flex gap-3 flex-col justify-between h-full items-start">
                         <h3 className="text-2xl font-semibold text-white">
                           {topic?.title}
                         </h3>
+                       <div className='w-full flex items-center justify-between'>
+                         <p className='flex items-center gap-1'>{topic.views?.length} <Eye/></p>
+                         <p>{new Date(topic.createdAt).toLocaleDateString()}</p>
+                       </div>
                       </div>
                     </Link>
                   </motion.div>

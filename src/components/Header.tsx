@@ -4,7 +4,7 @@ import Button from './UI/Button';
 import { useAuth } from '@/providers/AuthProvider';
 import { logout } from '@/services/authService';
 import { Link } from 'react-router-dom';
-import { CircleUser, CircleUserRound, User } from 'lucide-react';
+import { CircleUser } from 'lucide-react';
 import { FallingMenu } from './UI/FallingMenu';
 import { getForumTopics } from '@/services/topicService';
 import { Topic } from '@/types';
