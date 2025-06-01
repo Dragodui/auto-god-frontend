@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-     "noEmitOnError": false,     // Allows emit even with type errors
-    "skipLibCheck": true,       // Skip checking types in node_modules
+    "noEmitOnError": false, // Allows emit even with type errors
+    "skipLibCheck": true, // Skip checking types in node_modules
     "strict": false,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",

@@ -1,17 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import Wrapper from './Wrapper';
-import Button from './UI/Button';
-import { useAuth } from '@/providers/AuthProvider';
-import { logout } from '@/services/authService';
 import { Link } from 'react-router-dom';
-import { CircleUser } from 'lucide-react';
-import { FallingMenu } from './UI/FallingMenu';
 import { getForumTopics } from '@/services/topicService';
 import { Topic } from '@/types';
+import Navigation from './UI/Navigation';
 
 const Header: FC = (): JSX.Element => {
-  const { isAuthenticated } = useAuth();
   const [topics, setTopics] = useState<{ label: string; href: string }[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const fallingMenuPages = [
     {
       label: 'Home',
@@ -33,6 +29,10 @@ const Header: FC = (): JSX.Element => {
       label: 'Market',
       href: '/market',
     },
+    {
+      label: 'Events',
+      href: '/events',
+    },
   ];
 
   const fetchTopics = async () => {
@@ -53,7 +53,7 @@ const Header: FC = (): JSX.Element => {
   }, []);
 
   return (
-    <header className="font-sansation py-[20px]">
+    <header className="font-sansation py-[20px] z-[55]">
       <Wrapper>
         <div className="w-full flex justify-between items-center">
           <Link
@@ -62,33 +62,16 @@ const Header: FC = (): JSX.Element => {
           >
             AutoGOD
           </Link>
-          <nav className="flex gap-5 items-center">
-            <FallingMenu label="Navigation" items={fallingMenuPages} />
-            <FallingMenu label="Topics" items={topics} />
-            {isAuthenticated ? (
-              <>
-                <Link to="/me" className="text-white hover:text-white">
-                  <CircleUser size={32} />
-                </Link>
-                <Button addStyles="text-sm" onClick={() => logout()}>
-                  Log Out
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button addStyles="text-sm">
-                  <Link to="/login" className="text-white hover:text-white">
-                    Sign In
-                  </Link>
-                </Button>
-                <Button addStyles="text-sm">
-                  <Link to="/register" className="text-white hover:text-white">
-                    Sign Out
-                  </Link>
-                </Button>
-              </>
-            )}
-          </nav>
+          <div className='hidden sm:block'>
+            
+         <Navigation fallingMenuPages={fallingMenuPages} topics={topics}/>
+          </div>
+          <button className='flex flex-col justify-between w-[40px] h-[40px] sm:hidden relative z-[60]' onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <div className='block w-full'></div>
+          </button>
+          <div className={`sm:hidden flex items-center justify-center absolute right-[${isMenuOpen ? '0' : '-100%'}] top-0 right-0 bg-[#222225] w-[200px] h-screen transition-all duration-300 ease-in-out z-[50]`}>
+         <Navigation fallingMenuPages={fallingMenuPages} topics={topics}/>
+          </div>
         </div>
       </Wrapper>
     </header>

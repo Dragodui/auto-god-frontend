@@ -6,7 +6,7 @@ import { useAuth } from '@/providers/AuthProvider';
 
 interface AdminControlsProps {
   itemId: string;
-  itemType: 'post' | 'comment' | 'news' | 'user';
+  itemType: 'post' | 'comment' | 'news' | 'user' | 'event';
   banUser?: string;
   username?: string;
   isUserIncluded?: boolean;
@@ -37,6 +37,9 @@ const AdminControls: React.FC<AdminControlsProps> = ({
           response = await deleteComment(itemId);
           break;
         case 'news':
+          response = await deleteNews(itemId);
+          break;
+        case 'event':
           response = await deleteNews(itemId);
           break;
         default:

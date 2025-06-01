@@ -22,6 +22,9 @@ import ItemList from './pages/Market';
 import ItemDetail from './components/ItemDetail';
 import CreateItem from './components/CreateItem';
 import ChatsPage from './pages/ChatsPage';
+import Events from './pages/Events';
+import CreateEvent from './pages/CreateEvent';
+import Event from './pages/Event';
 
 function App() {
   return (
@@ -41,6 +44,7 @@ function App() {
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/create-item" element={<CreateItem />} />
+              <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/market/chats" element={<ChatsPage />} />
             </Route>
             {/* public routes */}
@@ -50,11 +54,13 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/posts" element={<Posts />} />
             <Route path="/market" element={<ItemList />} />
+            <Route path="/events" element={<Events />} />
 
             <Route path="/market/:id" element={<ItemDetail />} />
             <Route path="/topics/:topicName" element={<Topic />} />
             <Route path="/news/:newsId" element={<SingleNews />} />
             <Route path="/posts/:postId" element={<SinglePost />} />
+            <Route path="/events/:id" element={<Event />} />
           </Routes>
         </Router>
       </AuthProvider>

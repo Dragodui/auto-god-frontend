@@ -3,6 +3,7 @@ import Wrapper from '../components/Wrapper';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getNews } from '@/services/newsService';
+import { getImage } from '@/utils/getImage';
 import { Loader, Eye } from 'lucide-react';
 
 const News: React.FC = () => {
@@ -17,7 +18,6 @@ const News: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
-  console.log(news)
 
   return (
     <Wrapper>
@@ -65,7 +65,7 @@ const News: React.FC = () => {
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
                         backgroundImage: topic.image
-                          ? `url(${import.meta.env.VITE_SERVER_HOST}${topic.image})`
+                          ? `url(${getImage(topic.image)})`
                           : 'none',
                       }}
                     >
@@ -74,10 +74,14 @@ const News: React.FC = () => {
                         <h3 className="text-2xl font-semibold text-white">
                           {topic?.title}
                         </h3>
-                       <div className='w-full flex items-center justify-between'>
-                         <p className='flex items-center gap-1'>{topic.views?.length} <Eye/></p>
-                         <p>{new Date(topic.createdAt).toLocaleDateString()}</p>
-                       </div>
+                        <div className="w-full flex items-center justify-between">
+                          <p className="flex items-center gap-1">
+                            {topic.views?.length} <Eye />
+                          </p>
+                          <p>
+                            {new Date(topic.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
                     </Link>
                   </motion.div>

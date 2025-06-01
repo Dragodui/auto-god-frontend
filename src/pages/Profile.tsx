@@ -17,6 +17,7 @@ import {
   saveUserData,
   uploadUserAvatar,
 } from '@/services/userService';
+import { getImage } from '@/utils/getImage';
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
@@ -83,7 +84,7 @@ const Profile: FC = () => {
                   {userData.avatar ? (
                     <img
                       className="w-full h-full object-cover rounded-full"
-                      src={`${import.meta.env.VITE_SERVER_HOST}${userData.avatar}`}
+                      src={getImage(userData.avatar)}
                       alt="User avatar"
                     />
                   ) : (

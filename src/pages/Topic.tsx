@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getTopicItems } from '@/services/topicService';
 import { Loader } from 'lucide-react';
+import { getImage } from '@/utils/getImage';
 import { useAuth } from '@/providers/AuthProvider';
 
 const Topic: React.FC = () => {
@@ -103,7 +104,7 @@ const Topic: React.FC = () => {
                       className="bg-[#2A2A35] p-6 min-h-[200px] rounded-lg hover:bg-[#32323E] transition-colors h-full flex flex-col justify-between bg-cover bg-center bg-no-repeat"
                       style={{
                         backgroundImage: topic.image
-                          ? `url(${import.meta.env.VITE_SERVER_HOST}${topic.image})`
+                          ? `url(${getImage(topic.image)})`
                           : 'none',
                       }}
                     >

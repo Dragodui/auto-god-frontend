@@ -13,89 +13,46 @@ import {
   MessageSquare,
   LoaderIcon,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import Wrapper from '@/components/Wrapper';
 import { getImage } from '@/utils/getImage';
 import CommentsSection from '@/components/CommentSection';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { getCommentsForPost } from '@/store/slices/commentsSlice';
-import { getCurrentProfileData } from '@/store/slices/userSlice';
-import { getPost, likePost, viewPost } from '@/store/slices/postsSlice';
+
 import Loader from '@/components/UI/Loader';
 import AdminControls from '@/components/UI/AdminControls';
 import { useAuth } from '@/providers/AuthProvider';
-import { getOneNews, likeNews, viewNews } from '@/store/slices/newsSlice';
+import { getEvent, likeEvent, viewEvent } from '@/services/eventsService';
 
-interface SingleContentProps {
-  id: string;
-  contentType: 'post' | 'news';
-  backLink: string;
-  backText: string;
-  moreLink: string;
-  moreText: string;
-}
-
-const SingleContent: React.FC<SingleContentProps> = ({
-  id,
-  contentType,
-  backLink,
-  backText,
-}) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const item = useSelector((state: RootState) =>
-    contentType === 'post' ? state.posts.currentPost : state.news.currentNews
-  );
-  const loading = useSelector((state: RootState) =>
-    contentType === 'post' ? state.posts.loading : state.news.loading
-  );
+const Event: React.FC = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState<boolean>(true);
   const { user: currentUser } = useSelector((state: RootState) => state.user);
+  const [event, setEvent] = useState<any | null>(null);
   const { userId } = useAuth();
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false);
 
+  const fetchEvent = async () => {
+    const parsedEvent = await getEvent(id);
+    console.log(parsedEvent);
+    setEvent(parsedEvent);
+  };
+  const fetchView = async () => await viewEvent(id);
   useEffect(() => {
     if (id) {
-      switch (contentType) {
-        case 'post':
-          dispatch(getPost(id));
-          break;
-        case 'news':
-          dispatch(getOneNews(id));
-          break;
-      }
-      dispatch(getCommentsForPost(id));
-      dispatch(getCurrentProfileData());
+      fetchEvent();
+      fetchView();
+      setLoading(false);
     }
-  }, [dispatch, id]);
-
-  // useEffect(() => {
-  //   if (id) {
-  //     switch (contentType) {
-  //       case 'post':
-  //          dispatch(viewPost(id))
-  //         break;
-  //       case 'news':
-  //          dispatch(viewNews(id));
-  //         break;
-  //     }
-  //   }
-  // }, []);
+  }, [id]);
 
   const handleLike = async () => {
     try {
-      switch (contentType) {
-        case 'post':
-          await dispatch(likePost(id));
-          await dispatch(getPost(id));
-          break;
-        case 'news':
-          await dispatch(likeNews(id));
-          await dispatch(getOneNews(id));
-          break;
-      }
+      await likeEvent(id);
     } catch (error) {
-      console.error(`Error liking ${contentType}:`, error);
+      console.error(`Error liking Event:`, error);
     }
   };
 
@@ -112,48 +69,41 @@ const SingleContent: React.FC<SingleContentProps> = ({
   };
 
   const isLiked = () => {
-    if (!item || !userId) return false;
-    return item.likes?.includes(userId);
+    if (!event || !userId) return false;
+    return event.likes?.includes(userId);
   };
 
   const getViewCount = () => {
-    if (!item || item.views === undefined) return 0;
-    return item.views.length;
+    if (!event || event.views === undefined) return 0;
+    return event.views.length;
   };
 
   if (loading) {
     return (
       <Wrapper>
         <div className="min-h-screen bg-[#222225] text-white w-full flex items-center justify-center">
-          {contentType === 'post' ? (
-            <Loader />
-          ) : (
-            <LoaderIcon className="w-8 h-8 animate-spin" />
-          )}
+          <Loader />
         </div>
       </Wrapper>
     );
   }
 
-  if (!item) {
+  if (!event) {
     return (
       <Wrapper>
         <div className="min-h-screen bg-[#222225] text-white w-full">
           <div className="container mx-auto py-16">
             <Link
-              to={backLink}
+              to="/events"
               className="flex items-center text-gray-400 hover:text-white mb-8"
             >
               <ArrowLeft className="mr-2" size={20} />
-              {backText}
+              Back to events
             </Link>
             <div className="text-center py-16">
-              <h2 className="text-3xl font-bold mb-4">
-                {contentType === 'post' ? 'Post' : 'News'} not found
-              </h2>
+              <h2 className="text-3xl font-bold mb-4">Event not found</h2>
               <p className="text-gray-400">
-                The {contentType} article you're looking for doesn't exist or
-                has been removed.
+                The Event you're looking for doesn't exist or has been removed.
               </p>
             </div>
           </div>
@@ -195,8 +145,8 @@ const SingleContent: React.FC<SingleContentProps> = ({
                 onClick={(e) => e.stopPropagation()}
               >
                 <img
-                  src={getImage(item.image) || '/placeholder.svg'}
-                  alt={item.title}
+                  src={getImage(event.image) || '/placeholder.svg'}
+                  alt={event.title}
                   className="max-w-full max-h-[90vh] object-contain rounded-lg"
                 />
               </motion.div>
@@ -208,9 +158,9 @@ const SingleContent: React.FC<SingleContentProps> = ({
           <div className="flex items-center justify-between mb-4">
             {currentUser?.role === 'admin' && (
               <AdminControls
-                itemType={contentType}
+                itemType="event"
                 itemId={id}
-                onDelete={() => (window.location.href = backLink)}
+                onDelete={() => (window.location.href = '/events')}
               />
             )}
           </div>
@@ -221,11 +171,11 @@ const SingleContent: React.FC<SingleContentProps> = ({
             transition={{ duration: 0.5 }}
           >
             <Link
-              to={backLink}
+              to="/events"
               className="flex items-center text-gray-400 hover:text-white mb-8"
             >
               <ArrowLeft className="mr-2" size={20} />
-              {backText}
+              Back to events
             </Link>
           </motion.div>
 
@@ -239,14 +189,14 @@ const SingleContent: React.FC<SingleContentProps> = ({
             <div className="w-full rounded-xl overflow-hidden relative mb-8">
               <div className="relative">
                 {/* Main Image Container */}
-                {item.image && item.image !== 'undefined' && (
+                {event.image && event.image !== 'undefined' && (
                   <div
                     className="relative group cursor-pointer"
                     onClick={toggleFullscreenImage}
                   >
                     <img
-                      src={getImage(item.image) || '/placeholder.svg'}
-                      alt={item.title}
+                      src={getImage(event.image) || '/placeholder.svg'}
+                      alt={event.title}
                       className="w-full h-[300px] md:h-[400px] object-cover rounded-xl"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -257,16 +207,16 @@ const SingleContent: React.FC<SingleContentProps> = ({
               </div>
             </div>
 
-            <h1 className="text-4xl font-bold mb-4">{item.title}</h1>
+            <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
 
             <div className="flex flex-wrap items-center gap-4 text-gray-400 mb-8">
               <div className="flex items-center gap-2">
                 <User size={16} />
-                <span>{item.author?.name || 'Anonymous'}</span>
+                <span>{event.author?.name || 'Anonymous'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar size={16} />
-                <span>{formatDate(item.createdAt)}</span>
+                <span>{formatDate(event.createdAt)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Eye size={16} />
@@ -274,27 +224,25 @@ const SingleContent: React.FC<SingleContentProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <MessageSquare size={16} />
-                <span>{item.comments?.length || 0} comments</span>
+                <span>{event.comments?.length || 0} comments</span>
               </div>
-              {item.tags && item.tags.length > 0 && (
+              {event.tags && event.tags.length > 0 && (
                 <div className="flex items-center gap-2">
                   <Tag size={16} />
                   <div className="flex gap-2">
-                    {item.tags.map((tag: string) => (
-                      <span
-                        key={tag}
-                        className="bg-[#32323E] px-2 py-1 rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                   {event.tags.map((tag: { _id: string; title: string }) => (
+  <span key={tag._id} className="bg-[#32323E] px-2 py-1 rounded">
+    {tag.title}
+  </span>
+))}
+
                   </div>
                 </div>
               )}
             </div>
 
             <div className="prose prose-invert max-w-none">
-              <ReactMarkdown>{item.content}</ReactMarkdown>
+              <ReactMarkdown>{event.content}</ReactMarkdown>
             </div>
 
             <div className="mt-8 flex items-center gap-4">
@@ -307,7 +255,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
                 }`}
               >
                 <Heart size={20} className={isLiked() ? 'fill-current' : ''} />
-                <span>{item.likes?.length || 0}</span>
+                <span>{event.likes?.length || 0}</span>
               </button>
             </div>
           </motion.div>
@@ -320,4 +268,4 @@ const SingleContent: React.FC<SingleContentProps> = ({
   );
 };
 
-export default SingleContent;
+export default Event;

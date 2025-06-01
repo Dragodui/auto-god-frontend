@@ -30,6 +30,16 @@ export const deleteNews = async (newsId: string) => {
   }
 };
 
+export const deleteEvent = async (eventId: string) => {
+  try {
+    const response = await api.delete(`/admin/events/${eventId}`);
+    return { success: true, ...response.data };
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    return { success: false, error };
+  }
+};
+
 export const getBannedUsers = async () => {
   try {
     const response = await api.get('/admin/bans');
@@ -39,3 +49,23 @@ export const getBannedUsers = async () => {
     return { success: false, error };
   }
 };
+
+export const getUnacceptedEvents = async () => {
+  try {
+    const response = await api.get('/admin/events');
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error fetching unaccepted events:', error);
+    return { success: false, error };
+  }
+};
+
+export const acceptEvent = async (eventId: string) => {
+  try {
+    const response = await api.put(`/admin/events/${eventId}`);
+    return { success: true, ...response.data };
+  } catch (error) {
+    console.error('Error accepting event:', error);
+    return { success: false, error };
+  }
+}
