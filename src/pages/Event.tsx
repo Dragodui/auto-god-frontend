@@ -12,6 +12,7 @@ import {
   ZoomIn,
   MessageSquare,
   LoaderIcon,
+  MapPin,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -25,6 +26,7 @@ import Loader from '@/components/UI/Loader';
 import AdminControls from '@/components/UI/AdminControls';
 import { useAuth } from '@/providers/AuthProvider';
 import { getEvent, likeEvent, viewEvent } from '@/services/eventsService';
+import { generateMapsLink } from '@/utils/generateMapsLinks';
 
 const Event: React.FC = () => {
   const { id } = useParams();
@@ -207,7 +209,13 @@ const Event: React.FC = () => {
               </div>
             </div>
 
-            <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
+            <div className='flex gap-3 mb-4 items-center'>
+              <h1 className="text-4xl font-bold">{event.title}</h1>
+             <div className='p-2 bg-[#32323e] rounded-lg flex items-center gap-1'>
+              <MapPin />
+               <a href={generateMapsLink(event.place)} className="text-gray-300">Click to see place</a>
+             </div>
+            </div>
 
             <div className="flex flex-wrap items-center gap-4 text-gray-400 mb-8">
               <div className="flex items-center gap-2">

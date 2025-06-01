@@ -140,13 +140,17 @@ const Events = () => {
                 </motion.div>
               </>
             ) : (
-              <motion.div
+               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
                 className="text-gray-400"
               >
-                No events available.
+                {
+                  currentUser && currentUser.role === 'admin' 
+                    ? 'No unaccepted events available.' 
+                    : ''
+                }
               </motion.div>
             )}
 

@@ -5,6 +5,7 @@ import type { Tag } from '@/types';
 import { getTags } from '@/services/tagsService';
 import { useNavigate } from 'react-router-dom';
 import { createEvent } from '@/services/eventsService';
+import MapSelector from '@/components/MapSelector';
 
 interface CreateEventForm {
   title: string;
@@ -133,16 +134,15 @@ const CreateEvent: FC = () => {
             >
               Place
             </label>
-            <input
-              id="title"
-              name="place"
-              type="text"
-              required
-              value={form.place}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-[#222225] border border-[#646cff]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#646cff]/50 transition-all placeholder:text-[#f0f0f0]/30"
-              placeholder="Enter place"
-            />
+           <MapSelector
+  onLocationSelect={(value) =>
+    setForm((prev) => ({ ...prev, place: value }))
+  }
+/>
+{form.place && (
+  <p className="text-sm text-[#f0f0f0]/80 mt-1">Selected: {form.place}</p>
+)}
+
           </div>
 
           <div className="space-y-2">

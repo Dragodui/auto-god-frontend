@@ -25,6 +25,8 @@ import ChatsPage from './pages/ChatsPage';
 import Events from './pages/Events';
 import CreateEvent from './pages/CreateEvent';
 import Event from './pages/Event';
+import 'leaflet/dist/leaflet.css';
+
 
 function App() {
   return (
