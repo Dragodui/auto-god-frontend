@@ -3,6 +3,8 @@ import { deletePost, deleteComment, deleteNews } from '@/services/adminService';
 import { toast } from 'react-hot-toast';
 import BanDialog from '../admin/BanDialog';
 import { useAuth } from '@/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 interface AdminControlsProps {
   itemId: string;
@@ -10,7 +12,6 @@ interface AdminControlsProps {
   banUser?: string;
   username?: string;
   isUserIncluded?: boolean;
-  onDelete?: () => void;
 }
 
 const AdminControls: React.FC<AdminControlsProps> = ({
@@ -18,12 +19,12 @@ const AdminControls: React.FC<AdminControlsProps> = ({
   itemType,
   banUser,
   username,
-  onDelete,
   isUserIncluded = false,
 }) => {
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { userId } = useAuth();
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -32,15 +33,18 @@ const AdminControls: React.FC<AdminControlsProps> = ({
       switch (itemType) {
         case 'post':
           response = await deletePost(itemId);
+          navigate('/posts'); 
           break;
         case 'comment':
           response = await deleteComment(itemId);
           break;
         case 'news':
           response = await deleteNews(itemId);
+          navigate('/news');
           break;
         case 'event':
           response = await deleteNews(itemId);
+          navigate('/events');
           break;
         default:
           throw new Error('Invalid item type');
@@ -48,7 +52,6 @@ const AdminControls: React.FC<AdminControlsProps> = ({
 
       if (response.success) {
         toast.success(`${itemType} deleted successfully`);
-        onDelete?.();
       } else {
         throw new Error(response.error);
       }
@@ -61,6 +64,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({
 
   return (
     <>
+    <ToastContainer theme='dark' />
       <div className="flex items-center space-x-2">
         {isUserIncluded && banUser && username && banUser !== userId && (
           <button
@@ -87,7 +91,6 @@ const AdminControls: React.FC<AdminControlsProps> = ({
           banUser={banUser}
           username={username}
           onSuccess={() => {
-            onDelete?.();
             setIsBanDialogOpen(false);
           }}
         />

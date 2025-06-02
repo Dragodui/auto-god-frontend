@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '@/store/store';
 import {
   fetchChats,
@@ -15,6 +16,8 @@ import { getCurrentProfileData } from '@/services/userService';
 
 const ChatsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { chatId } = useParams<{ chatId?: string }>();
   const { chats, currentChat, loading } = useSelector(
     (state: RootState) => state.chats
   );
@@ -39,12 +42,27 @@ const ChatsPage: React.FC = () => {
     dispatch(fetchChats());
   }, [dispatch]);
 
+  // Handle URL parameter for specific chat
+  useEffect(() => {
+    if (chatId && chats.length > 0) {
+      // Check if the chat exists in the fetched chats
+      const chatExists = chats.find(chat => chat._id === chatId);
+      if (chatExists) {
+        dispatch(fetchChatById(chatId));
+      } else {
+        // Chat doesn't exist, redirect to chats page
+        navigate('/market/chats');
+      }
+    }
+  }, [chatId, chats, dispatch, navigate]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [currentChat?.messages]);
 
-  const handleChatSelect = (chatId: string) => {
-    dispatch(fetchChatById(chatId));
+  const handleChatSelect = (selectedChatId: string) => {
+    // Update URL when selecting a chat
+    navigate(`/market/chats/${selectedChatId}`);
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -84,10 +102,8 @@ const ChatsPage: React.FC = () => {
 
   return (
     <Wrapper>
-      <div className="min-h-screen bg-[#222225] text-white">
+      <div className="min-h-screen w-full bg-[#222225] text-white">
         <div className="container mx-auto py-4 px-4">
-          {/* <h1 className="text-3xl font-bold mb-8">Messages</h1> */}
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Chats List */}
             <div className="md:col-span-1 bg-[#32323E] rounded-lg p-4">
@@ -241,7 +257,19 @@ const ChatsPage: React.FC = () => {
                 </>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-gray-400">
-                  Select a conversation to start chatting
+                  {chatId ? (
+                    <div className="text-center">
+                      <p>Chat not found</p>
+                      <Link 
+                        to="/market/chats" 
+                        className="text-blue-400 hover:text-blue-300 underline"
+                      >
+                        Go back to chats
+                      </Link>
+                    </div>
+                  ) : (
+                    'Select a conversation to start chatting'
+                  )}
                 </div>
               )}
             </div>

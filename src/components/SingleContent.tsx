@@ -51,6 +51,8 @@ const SingleContent: React.FC<SingleContentProps> = ({
     contentType === 'post' ? state.posts.loading : state.news.loading
   );
   const { user: currentUser } = useSelector((state: RootState) => state.user);
+  console.log(currentUser)
+  
   const { userId } = useAuth();
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false);
 
@@ -69,18 +71,18 @@ const SingleContent: React.FC<SingleContentProps> = ({
     }
   }, [dispatch, id]);
 
-  // useEffect(() => {
-  //   if (id) {
-  //     switch (contentType) {
-  //       case 'post':
-  //          dispatch(viewPost(id))
-  //         break;
-  //       case 'news':
-  //          dispatch(viewNews(id));
-  //         break;
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (id) {
+      switch (contentType) {
+        case 'post':
+           dispatch(viewPost(id))
+          break;
+        case 'news':
+           dispatch(viewNews(id));
+          break;
+      }
+    }
+  }, []);
 
   const handleLike = async () => {
     try {
@@ -210,7 +212,6 @@ const SingleContent: React.FC<SingleContentProps> = ({
               <AdminControls
                 itemType={contentType}
                 itemId={id}
-                onDelete={() => (window.location.href = backLink)}
               />
             )}
           </div>

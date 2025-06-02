@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { acceptEvent, deleteEvent, getUnacceptedEvents } from '@/services/adminService';
 import Button from '@/components/UI/Button';
+import { generateMapsLink } from '@/utils/generateMapsLinks';
 
 const Events = () => {
   const [events, setEvents] = React.useState<any[] | null>(null);
@@ -184,14 +185,14 @@ const Events = () => {
                           : 'none',
                       }}
                     >
-                      <div className="absolute inset-0 bg-black/40"></div>
+                      <div className="absolute inset-0 bg-black/70"></div>
                       <div className="relative z-10 flex flex-col gap-2">
                         <h3 className="text-2xl font-semibold text-white">
                           {topic?.title}
                         </h3>
 
                         <p className="text-sm text-gray-300">
-                          <strong>Place:</strong> {topic.place}
+                          <strong>Place:</strong> <a onClick={e => e.stopPropagation()} className='text-link underline' target="_blank" href={generateMapsLink(topic.place)}>Click to see!</a>
                         </p>
 
                         <p className="text-sm text-gray-300">

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchItemById, purchaseItem } from '@/store/slices/itemsSlice';
 import { createChat } from '@/store/slices/chatsSlice';
 import { RootState, AppDispatch } from '@/store/store';
-import ChatWindow from './ChatWindow';
 import Wrapper from './Wrapper';
 import { useAuth } from '@/providers/AuthProvider';
 import Button from './UI/Button';
@@ -14,12 +13,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '@/styles/swiper.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [showChat, setShowChat] = useState(false);
 
   const {
     currentItem: item,
@@ -39,6 +38,7 @@ const ItemDetail: React.FC = () => {
 
     try {
       await dispatch(purchaseItem(item._id));
+      toast.success('Item purchased successfully!');
       navigate('/market');
     } catch (error) {
       console.error('Error purchasing item:', error);
@@ -49,8 +49,9 @@ const ItemDetail: React.FC = () => {
     if (!item || !userId) return;
 
     try {
-      await dispatch(createChat(item._id));
-      setShowChat(true);
+      const data = await dispatch(createChat(item._id));
+      console.log(data);
+      await navigate(`/market/chats/${data.payload._id}`);
     } catch (error) {
       console.error('Error creating chat:', error);
     }
@@ -72,6 +73,8 @@ const ItemDetail: React.FC = () => {
 
   return (
     <Wrapper>
+              <ToastContainer 
+      theme="dark" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative">
           <Swiper
@@ -133,11 +136,6 @@ const ItemDetail: React.FC = () => {
           </div>
         </div>
       </div>
-      {showChat && item && (
-        <div className="fixed bottom-0 right-0 w-96 h-96 shadow-lg rounded-t-lg">
-          <ChatWindow itemId={item._id} onClose={() => setShowChat(false)} />
-        </div>
-      )}
     </Wrapper>
   );
 };

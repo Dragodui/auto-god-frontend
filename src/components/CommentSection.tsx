@@ -108,6 +108,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
   const handleLikeComment = async (commentId: string) => {
     try {
       await dispatch(likeComment(commentId));
+      await dispatch(getCommentsForPost(postId));
     } catch (error) {
       console.error('Error liking comment:', error);
     }

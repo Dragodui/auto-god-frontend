@@ -53,6 +53,7 @@ const Event: React.FC = () => {
   const handleLike = async () => {
     try {
       await likeEvent(id);
+      await fetchEvent();
     } catch (error) {
       console.error(`Error liking Event:`, error);
     }
@@ -213,7 +214,7 @@ const Event: React.FC = () => {
               <h1 className="text-4xl font-bold">{event.title}</h1>
              <div className='p-2 bg-[#32323e] rounded-lg flex items-center gap-1'>
               <MapPin />
-               <a href={generateMapsLink(event.place)} className="text-gray-300">Click to see place</a>
+              <a href={generateMapsLink(event.place)} target="_blank" rel="noopener noreferrer" className="text-gray-300">Click to see place</a>
              </div>
             </div>
 

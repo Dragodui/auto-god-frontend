@@ -29,8 +29,8 @@ const ItemList: React.FC = () => {
 
   return (
     <Wrapper>
-      <div className="w-full flex items-center justify-between">
-        <h1 className="text-3xl font-bold mb-8">Marketplace</h1>
+      <div className="w-full flex items-center justify-between flex-wrap mb-8 gap-3">
+        <h1 className="text-3xl font-bold">Marketplace</h1>
         <nav className="flex gap-4 items-center">
           <Link
             className="text-lg flex gap-2 items-center bg-secondary font-medium py-1 px-3 rounded-md"

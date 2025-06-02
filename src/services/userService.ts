@@ -61,3 +61,31 @@ export const getUserById = async (id: string) => {
     console.error('Error while getting user by id: ', error);
   }
 };
+
+export const changePassword = async (passwordForm: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  try {
+    console.log(passwordForm)
+    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
+      return {message: 'Both current and new passwords are required'};
+    }
+  if (passwordForm.currentPassword === passwordForm.newPassword) {
+    return {message: 'New password must be different from the current password'};
+  }
+    const response = await api.patch('/user/changePassword', {
+      oldPassword: passwordForm.currentPassword,
+      newPassword: passwordForm.newPassword,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error while changing password: ', error);
+    
+    const errorData = error.response?.data;
+    if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+      return errorData.errors[0];
+    }
+    return errorData || 'An error occurred';
+  }
+}

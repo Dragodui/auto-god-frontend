@@ -16,18 +16,28 @@ import {
   getCurrentProfileData,
   saveUserData,
   uploadUserAvatar,
+  changePassword,
 } from '@/services/userService';
 import { getImage } from '@/utils/getImage';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
   const [lastActivity, setLastActivity] = useState<Activity[] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditingPassword, setIsEditingPassword] = useState<boolean>(false);
+  
+
   const [editForm, setEditForm] = useState<ChangeUserData>({
     name: '',
     lastName: '',
     nickname: '',
     car: '',
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
   });
 
   useEffect(() => {
@@ -50,9 +60,23 @@ const Profile: FC = () => {
     });
   }, []);
 
+  const notify = (content: string, type?: string) => {
+    if (type === 'error') {
+      toast.error(content, { position: 'top-right', autoClose: 5000 });
+    }
+    else {
+      toast.success(content, { position: 'top-right', autoClose: 5000 });
+    }
+  }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+  
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,8 +84,24 @@ const Profile: FC = () => {
     await saveUserData(editForm);
     const data = await getCurrentProfileData();
     setUserData(data as User);
+    notify('Profile updated successfully');
     setIsEditing(false);
   };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const data = await changePassword(passwordForm);
+  console.log(data);
+  
+  if (data && typeof data === 'object' && ('message' in data || 'msg' in data) && !data.message.includes('successfully')) {
+    notify(`Error: ${data.message || data.msg}`, 'error');
+  } 
+  else {
+    setPasswordForm({ currentPassword: '', newPassword: '' });
+    notify('Password updated successfully');
+    setIsEditingPassword(false);
+  }
+};
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await uploadUserAvatar(e);
@@ -76,8 +116,10 @@ const Profile: FC = () => {
   return (
     <Wrapper>
       <div className="min-h-screen bg-bg text-text w-full">
+        <ToastContainer 
+theme="dark" />
         <div className="mx-auto">
-          <div className=" rounded-xl shadow-lg overflow-hidden">
+          <div className="rounded-xl overflow-hidden">
             <div className="md:flex px-8 py-4">
               <div className="md:flex-shrink-0">
                 <div className="relative w-48 h-48 mx-auto md:mx-0">
@@ -107,6 +149,7 @@ const Profile: FC = () => {
                   />
                 </div>
               </div>
+
               <div className="p-8 flex-grow">
                 {isEditing ? (
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -135,11 +178,11 @@ const Profile: FC = () => {
                       placeholder="Car"
                     />
                     <div className="flex items-center gap-3">
-                      <Button addStyles="text-lg px-4 py-2" type="submit">
+                      <Button addStyles="text-sm px-4 py-2" type="submit">
                         Save
                       </Button>
                       <Button
-                        addStyles="text-lg px-4 py-2"
+                        addStyles="text-sm px-4 py-2"
                         type="button"
                         onClick={() => setIsEditing(false)}
                       >
@@ -156,13 +199,49 @@ const Profile: FC = () => {
                       {userData.name} {userData.lastName}
                     </h1>
                     <p className="mt-2 text-gray-400">@{userData.nickname}</p>
-                    <Button onClick={() => setIsEditing(true)} className="mt-4">
+                    <Button onClick={() => setIsEditing(true)} addStyles="mt-4 text-sm">
                       Edit Profile
+                    </Button>
+                    <br />
+                    <Button onClick={() => setIsEditingPassword(true)} addStyles="text-sm mt-2">
+                      Change Password
                     </Button>
                   </>
                 )}
+
+                {isEditingPassword && (
+                  <form onSubmit={handlePasswordSubmit} className="space-y-4 mt-6">
+                    <Input
+                      type="password"
+                      name="currentPassword"
+                      value={passwordForm.currentPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="Current Password"
+                    />
+                    <Input
+                      type="password"
+                      name="newPassword"
+                      value={passwordForm.newPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="New Password"
+                    />
+                    <div className="flex items-center gap-3">
+                      <Button addStyles="text-sm px-4 py-2" type="submit">
+                        Update Password
+                      </Button>
+                      <Button
+                        addStyles="text-sm px-4 py-2"
+                        type="button"
+                        onClick={() => setIsEditingPassword(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
+
             <div className="px-8 py-4 bg-blocks">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center">
@@ -172,29 +251,26 @@ const Profile: FC = () => {
                 <div className="flex items-center">
                   <StarIcon className="h-6 w-6 text-secondary mr-2" />
                   <span>
-                    {userData.rank.charAt(0).toUpperCase() +
-                      userData.rank.slice(1)}{' '}
-                    Rank
+                    {userData.rank.charAt(0).toUpperCase() + userData.rank.slice(1)} Rank
                   </span>
                 </div>
                 <div className="flex items-center">
                   <CalendarIcon className="h-6 w-6 text-secondary mr-2" />
                   <span>
-                    Member since{' '}
-                    {new Date(userData.createdAt).toLocaleDateString()}
+                    Member since {new Date(userData.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 rounded-xl shadow-lg p-6">
+          <div className="mt-8 rounded-xl  p-6">
             <h2 className="text-2xl font-bold text-white mb-4">
               Recent Forum Activity
             </h2>
             <ul className="space-y-4">
-              {lastActivity !== null && lastActivity.length > 0 ? (
-                lastActivity?.map((activity: any) => (
+              {lastActivity && lastActivity.length > 0 ? (
+                lastActivity.map((activity: any) => (
                   <li key={activity.id}>
                     <a
                       href={`/post/${activity.id}`}

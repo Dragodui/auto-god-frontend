@@ -27,7 +27,6 @@ import CreateEvent from './pages/CreateEvent';
 import Event from './pages/Event';
 import 'leaflet/dist/leaflet.css';
 
-
 function App() {
   return (
     <Provider store={store}>
@@ -48,6 +47,7 @@ function App() {
               <Route path="/create-item" element={<CreateItem />} />
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/market/chats" element={<ChatsPage />} />
+              <Route path="/market/chats/:chatId" element={<ChatsPage />} />
             </Route>
             {/* public routes */}
             <Route path="*" element={<NotFound />} />

@@ -17,6 +17,7 @@ const Posts: React.FC = () => {
 
   useEffect(() => {
     getData();
+    console.log(posts)
   }, []);
 
   return (
@@ -74,6 +75,7 @@ const Posts: React.FC = () => {
                           {topic?.title}
                         </h3>
                       </div>
+                        <p>{topic.content.slice(0,40)}...</p>
                     </Link>
                   </motion.div>
                 ))}
