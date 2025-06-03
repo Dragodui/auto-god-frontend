@@ -17,7 +17,6 @@ const Posts: React.FC = () => {
 
   useEffect(() => {
     getData();
-    console.log(posts)
   }, []);
 
   return (

@@ -71,6 +71,18 @@ export const purchaseItem = createAsyncThunk(
   }
 );
 
+export const fetchUserItems = createAsyncThunk(
+  'items/fetchUserItems',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/items/user/items');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Error fetching user items');
+    }
+  }
+);
+
 const itemsSlice = createSlice({
   name: 'items',
   initialState,
@@ -138,7 +150,19 @@ const itemsSlice = createSlice({
       .addCase(purchaseItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      }).addCase(fetchUserItems.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }
+      ).addCase(fetchUserItems.fulfilled, (state, action) => {
+        state.userItems = action.payload;
+        state.loading = false;
+      }
+      ).addCase(fetchUserItems.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      }
+      );
   },
 });
 

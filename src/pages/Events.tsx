@@ -27,7 +27,6 @@ const Events = () => {
     const parsedUser = await getCurrentProfileData();
     setCurrentUser(parsedUser);
     if (parsedUser && 'role' in parsedUser && parsedUser?.role === 'admin') {
-      console.log((await getUnacceptedEvents()).data);
       setUnacceptedEvents((await getUnacceptedEvents()).data);
     }
   };

@@ -38,7 +38,6 @@ const Event: React.FC = () => {
 
   const fetchEvent = async () => {
     const parsedEvent = await getEvent(id);
-    console.log(parsedEvent);
     setEvent(parsedEvent);
   };
   const fetchView = async () => await viewEvent(id);

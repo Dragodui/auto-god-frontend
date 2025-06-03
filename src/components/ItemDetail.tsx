@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchItemById, purchaseItem } from '@/store/slices/itemsSlice';
@@ -50,7 +50,6 @@ const ItemDetail: React.FC = () => {
 
     try {
       const data = await dispatch(createChat(item._id));
-      console.log(data);
       await navigate(`/market/chats/${data.payload._id}`);
     } catch (error) {
       console.error('Error creating chat:', error);
@@ -73,7 +72,7 @@ const ItemDetail: React.FC = () => {
 
   return (
     <Wrapper>
-              <ToastContainer 
+    <ToastContainer 
       theme="dark" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative">
@@ -98,7 +97,7 @@ const ItemDetail: React.FC = () => {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold mb-2">{item.title}</h1>
-            <p className="text-gray-600">{item.description}</p>
+            <p className="">{item.description}</p>
           </div>
 
           <div className="flex items-center justify-between">
@@ -123,16 +122,20 @@ const ItemDetail: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {userId !== item.seller._id && (
-              <>
-                <Button onClick={handlePurchase} addStyles="w-full">
-                  Purchase Item
+           
+               {
+                item.seller._id === userId && (
+                   <Button onClick={handlePurchase} addStyles="w-full">
+                  Mark sold
                 </Button>
+                )
+               }
+              { userId !== item.seller._id && (
                 <Button onClick={handleContactSeller} addStyles="w-full">
                   Contact Seller
                 </Button>
-              </>
-            )}
+                )
+             }
           </div>
         </div>
       </div>

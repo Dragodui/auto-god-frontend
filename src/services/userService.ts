@@ -67,7 +67,6 @@ export const changePassword = async (passwordForm: {
   newPassword: string;
 }) => {
   try {
-    console.log(passwordForm)
     if (!passwordForm.currentPassword || !passwordForm.newPassword) {
       return {message: 'Both current and new passwords are required'};
     }

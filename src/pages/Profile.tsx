@@ -20,6 +20,7 @@ import {
 } from '@/services/userService';
 import { getImage } from '@/utils/getImage';
 import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const Profile: FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
@@ -57,7 +58,7 @@ const Profile: FC = () => {
       if (Array.isArray(data)) {
         setLastActivity(data);
       }
-    });
+    }).catch((error) => console.error('Error fetching last activity:', error));
   }, []);
 
   const notify = (content: string, type?: string) => {
@@ -91,9 +92,8 @@ const Profile: FC = () => {
   const handlePasswordSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const data = await changePassword(passwordForm);
-  console.log(data);
   
-  if (data && typeof data === 'object' && ('message' in data || 'msg' in data) && !data.message.includes('successfully')) {
+  if (data && typeof data === 'object' && ('message' in data || 'msg' in data) && !data.message?.includes('successfully')) {
     notify(`Error: ${data.message || data.msg}`, 'error');
   } 
   else {
@@ -271,14 +271,30 @@ theme="dark" />
             <ul className="space-y-4">
               {lastActivity && lastActivity.length > 0 ? (
                 lastActivity.map((activity: any) => (
-                  <li key={activity.id}>
-                    <a
-                      href={`/post/${activity.id}`}
-                      className="text-secondary hover:underline"
+                  <li key={activity.post._id}>
+                     <span> <strong>In post: </strong>
+                    <Link
+                      to={`/posts/${activity.post._id}`}
+                      className="underline text-link"
                     >
-                      {activity.title}
-                    </a>
-                    <p className="text-gray-400">{activity.createdAt}</p>
+                      {activity.post.title}
+                    </Link></span>
+                    {
+                      activity.comment && (
+                        <p>
+                          <strong>Wrote:</strong> {activity.comment.content}
+                        </p>
+                      )
+                    }
+                      <p className="text-gray-400"> {(() => {
+                      const date = new Date(activity.post.createdAt);
+                      const day = String(date.getDate()).padStart(2, '0');
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const year = date.getFullYear();
+                      const hours = String(date.getHours()).padStart(2, '0');
+                      const minutes = String(date.getMinutes()).padStart(2, '0');
+                      return `${day}.${month}.${year} ${hours}:${minutes}`;
+                    })()}</p>
                   </li>
                 ))
               ) : (

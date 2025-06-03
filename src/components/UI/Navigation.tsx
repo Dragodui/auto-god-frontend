@@ -28,7 +28,7 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
               <Link
                 key={page.href}
                 to={page.href}
-                className="block py-3 px-4 text-white hover:text-blue-400 hover:bg-gray-800 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-blue-400"
+                className="block py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-link"
               >
                 {page.label}
               </Link>
@@ -47,7 +47,7 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
                 <Link
                   key={topic.href}
                   to={topic.href}
-                  className="block py-3 px-4 text-white hover:text-blue-400 hover:bg-gray-800 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-blue-400"
+                  className="block py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-link"
                 >
                   {topic.label}
                 </Link>
@@ -62,7 +62,7 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
             <>
               <Link 
                 to="/me" 
-                className="flex items-center gap-3 py-3 px-4 text-white hover:text-blue-400 hover:bg-gray-800 rounded-lg transition-all duration-200"
+                className="flex items-center gap-3 py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200"
               >
                 <CircleUser size={20} />
                 <span>Profile</span>
@@ -79,14 +79,14 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
             <div className="space-y-3">
               <Link
                 to="/login"
-                className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 font-medium"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-secondary hover:bg-secondary text-white rounded-lg transition-all duration-200 font-medium"
               >
                 <LogIn size={18} />
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-all duration-200 font-medium"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-secondary text-link hover:bg-secondary hover:text-white rounded-lg transition-all duration-200 font-medium"
               >
                 <UserPlus size={18} />
                 Sign Up

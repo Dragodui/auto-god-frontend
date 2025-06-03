@@ -51,7 +51,6 @@ const SingleContent: React.FC<SingleContentProps> = ({
     contentType === 'post' ? state.posts.loading : state.news.loading
   );
   const { user: currentUser } = useSelector((state: RootState) => state.user);
-  console.log(currentUser)
   
   const { userId } = useAuth();
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false);
