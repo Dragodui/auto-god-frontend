@@ -6,17 +6,21 @@ import { RootState, AppDispatch } from '@/store/store';
 import type { Item } from '@/types/index';
 import Wrapper from '@/components/Wrapper';
 import { MessageCircle, Plus, Package, Store } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
 
 const ItemList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { items, userItems, loading, error } = useSelector(
     (state: RootState) => state.items
   );
+  const {userId} = useAuth();
   const [activeTab, setActiveTab] = useState<'marketplace' | 'myItems'>('marketplace');
 
   useEffect(() => {
     dispatch(fetchItems());
-    dispatch(fetchUserItems());
+    if (userId) {
+      dispatch(fetchUserItems());
+    }
   }, [dispatch]);
 
   if (loading) {

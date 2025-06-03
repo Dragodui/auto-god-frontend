@@ -116,6 +116,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
 
   // Format date
   const formatCommentDate = (date: Date) => {
+    console.log(date);
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   };
 
@@ -337,7 +338,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
       <h2 className="text-2xl font-bold mb-6">Comments</h2>
 
       {/* Comment Form */}
-      <form onSubmit={handleSubmitComment} className="mb-8">
+    {
+      currentUser && (
+          <form onSubmit={handleSubmitComment} className="mb-8">
         <div className="flex gap-4">
           <div className="w-10 h-10 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
             {currentUser?.avatar ? (
@@ -370,13 +373,15 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
           </div>
         </div>
       </form>
+      )
+    }
 
       {/* Comments List */}
       {loading ? (
         <div className="text-center py-4">Loading comments...</div>
       ) : (
         <>
-          {displayedComments.map(renderComment)}
+          {displayedComments.length ? displayedComments.map(renderComment) : <p className='text-gray-500'>No comments for this post yet.</p>}
           {parentComments.length > 3 && (
             <button
               onClick={() => setShowAllComments(!showAllComments)}

@@ -47,6 +47,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
   const item = useSelector((state: RootState) =>
     contentType === 'post' ? state.posts.currentPost : state.news.currentNews
   );
+  console.log(item)
   const loading = useSelector((state: RootState) =>
     contentType === 'post' ? state.posts.loading : state.news.loading
   );
@@ -297,7 +298,9 @@ const SingleContent: React.FC<SingleContentProps> = ({
               <ReactMarkdown>{item.content}</ReactMarkdown>
             </div>
 
-            <div className="mt-8 flex items-center gap-4">
+          {
+            currentUser && (
+                <div className="mt-8 flex items-center gap-4">
               <button
                 onClick={handleLike}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
@@ -310,6 +313,8 @@ const SingleContent: React.FC<SingleContentProps> = ({
                 <span>{item.likes?.length || 0}</span>
               </button>
             </div>
+            )
+          }
           </motion.div>
 
           {/* Comments Section */}
