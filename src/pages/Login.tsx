@@ -15,7 +15,7 @@ const Login: React.FC = () => {
     login: '',
     password: '',
   });
-  
+
   const [error, setError] = useState<string | null>(null);
   const authContext = useAuth();
   if (!authContext) {
@@ -23,13 +23,12 @@ const Login: React.FC = () => {
   }
   const { login: loginUser } = useAuth();
   const notify = (content: string, type?: string) => {
-      if (type === 'error') {
-        toast.error(content, { position: 'top-right', autoClose: 5000 });
-      }
-      else {
-        toast.success(content, { position: 'top-right', autoClose: 5000 });
-      }
-    } 
+    if (type === 'error') {
+      toast.error(content, { position: 'top-right', autoClose: 5000 });
+    } else {
+      toast.success(content, { position: 'top-right', autoClose: 5000 });
+    }
+  };
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -51,7 +50,7 @@ const Login: React.FC = () => {
 
   return (
     <Wrapper>
-      <ToastContainer theme="dark"/>
+      <ToastContainer theme="dark" />
       <Form action="submit" onSubmit={handleSubmit}>
         <h2 className="text-5xl font-bold mb-[30px]">Log in</h2>
         <Input
@@ -67,17 +66,29 @@ const Login: React.FC = () => {
           type="password"
         />
         <p>
-          Don`t have an account? <Link to="/register">Register</Link>
+          Don`t have an account? <Link className='text-link underline' to="/register">Register</Link>
         </p>
-         <p>
-          Forget password? <button onClick={async () => {
-            const data = await forgetPassword(formData.login);
-            if (data.includes("failed")) {
-            notify(data?.message, "error");
-            } else {
-            notify("Link was send on your email!");
-            }
-          }}>Click here!</button>
+        <p>
+          Forget password?{' '}
+          <button
+            className="text-link underline"
+            type="button"
+            onClick={async (e) => {
+              e.preventDefault();
+              if (!formData.login) {
+                notify('Provide your email!', "error");
+                return;
+              }
+              const data = await forgetPassword(formData.login);
+              if (data?.message?.includes('failed')) {
+                notify(data?.message, 'error');
+              } else {
+                notify('Link was send on your email!');
+              }
+            }}
+          >
+            Click here!
+          </button>
         </p>
         <p className="text-red-500">{error}</p>
         <Button type="submit">Log in</Button>

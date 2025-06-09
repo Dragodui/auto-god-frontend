@@ -1,20 +1,43 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { FallingMenu } from './FallingMenu';
 import { Link } from 'react-router-dom';
 import { CircleUser, LogOut, LogIn, UserPlus } from 'lucide-react';
 import Button from './Button';
 import { useAuth } from '@/providers/AuthProvider';
 import { logout } from '@/services/authService';
+import { RootState } from '@/store/store';
+import { getImage } from '@/utils/getImage';
+import { useSelector } from 'react-redux';
+import { getCurrentProfileData } from '@/services/userService';
 
 interface NavigationProps {
-    fallingMenuPages: { label: string; href: string }[];
-    topics: { label: string; href: string }[];
-    isMobile?: boolean;
+  fallingMenuPages: { label: string; href: string }[];
+  topics: { label: string; href: string }[];
+  isMobile?: boolean;
 }
 
-const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = false}) => {
+const Navigation: FC<NavigationProps> = ({
+  fallingMenuPages,
+  topics,
+  isMobile = false,
+}) => {
   const { isAuthenticated } = useAuth();
-  
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [loading, setIsLoading] = useState(true);
+
+  const getCurrentUser = async () => {
+    setIsLoading(true);
+    const data = await getCurrentProfileData();
+    if (!("message" in data)) {
+      setCurrentUser(data);
+    }
+    setIsLoading(false);
+    
+  }
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   if (isMobile) {
     return (
       <nav className="flex flex-col gap-6 w-full">
@@ -60,11 +83,20 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
         <div className="pt-6 border-t border-gray-700 space-y-4">
           {isAuthenticated ? (
             <>
-              <Link 
-                to="/me" 
-                className="flex items-center gap-3 py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200"
+              <Link
+                to="/me"
+                className={`flex items-center gap-3 py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200 `}
               >
-                <CircleUser size={20} />
+               {
+  loading ? (
+    <div className="w-[30px] h-[30px] rounded-full bg-gray-500 animate-pulse" />
+  ) : currentUser  && currentUser.avatar  ? (
+    <img className='w-[30px] h-[30px] rounded-full' src={getImage(currentUser.avatar)} alt="" />
+  ) : (
+    <CircleUser size={20} />
+  )
+}
+
                 <span>Profile</span>
               </Link>
               <button
@@ -106,7 +138,16 @@ const Navigation: FC<NavigationProps> = ({fallingMenuPages, topics, isMobile = f
       {isAuthenticated ? (
         <>
           <Link to="/me" className="text-white hover:text-white">
-            <CircleUser size={32} />
+            {
+  loading ? (
+    <div className="w-[40px] h-[40px] rounded-full bg-gray-500 animate-pulse" />
+  ) : currentUser && currentUser.avatar ? (
+    <img className='w-[40px] h-[40px] rounded-full' src={getImage(currentUser.avatar)} alt="" />
+  ) : (
+    <CircleUser size={32} />
+  )
+}
+
           </Link>
           <Button addStyles="text-sm" onClick={() => logout()}>
             Log Out

@@ -72,8 +72,7 @@ const ItemDetail: React.FC = () => {
 
   return (
     <Wrapper>
-    <ToastContainer 
-      theme="dark" />
+      <ToastContainer theme="dark" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative">
           <Swiper
@@ -122,20 +121,16 @@ const ItemDetail: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-           
-               {
-                item.seller._id === userId && (
-                   <Button onClick={handlePurchase} addStyles="w-full">
-                  Mark sold
-                </Button>
-                )
-               }
-              { userId !== item.seller._id && (
-                <Button onClick={handleContactSeller} addStyles="w-full">
-                  Contact Seller
-                </Button>
-                )
-             }
+            {item.seller._id === userId && (
+              <Button onClick={handlePurchase} addStyles="w-full">
+                Mark sold
+              </Button>
+            )}
+            {userId !== item.seller._id && (
+              <Button onClick={handleContactSeller} addStyles="w-full">
+                Contact Seller
+              </Button>
+            )}
           </div>
         </div>
       </div>

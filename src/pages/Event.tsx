@@ -209,12 +209,19 @@ const Event: React.FC = () => {
               </div>
             </div>
 
-            <div className='flex gap-3 mb-4 items-center'>
+            <div className="flex gap-3 mb-4 items-center">
               <h1 className="text-4xl font-bold">{event.title}</h1>
-             <div className='p-2 bg-[#32323e] rounded-lg flex items-center gap-1'>
-              <MapPin />
-              <a href={generateMapsLink(event.place)} target="_blank" rel="noopener noreferrer" className="text-gray-300">Click to see place</a>
-             </div>
+              <div className="p-2 bg-[#32323e] rounded-lg flex items-center gap-1">
+                <MapPin />
+                <a
+                  href={generateMapsLink(event.place)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300"
+                >
+                  Click to see place
+                </a>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-4 text-gray-400 mb-8">
@@ -238,12 +245,14 @@ const Event: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Tag size={16} />
                   <div className="flex gap-2">
-                   {event.tags.map((tag: { _id: string; title: string }) => (
-  <span key={tag._id} className="bg-[#32323E] px-2 py-1 rounded">
-    {tag.title}
-  </span>
-))}
-
+                    {event.tags.map((tag: { _id: string; title: string }) => (
+                      <span
+                        key={tag._id}
+                        className="bg-[#32323E] px-2 py-1 rounded"
+                      >
+                        {tag.title}
+                      </span>
+                    ))}
                   </div>
                 </div>
               )}

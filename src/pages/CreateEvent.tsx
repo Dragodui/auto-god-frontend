@@ -134,15 +134,16 @@ const CreateEvent: FC = () => {
             >
               Place
             </label>
-           <MapSelector
-  onLocationSelect={(value) =>
-    setForm((prev) => ({ ...prev, place: value }))
-  }
-/>
-{form.place && (
-  <p className="text-sm text-[#f0f0f0]/80 mt-1">Selected: {form.place}</p>
-)}
-
+            <MapSelector
+              onLocationSelect={(value) =>
+                setForm((prev) => ({ ...prev, place: value }))
+              }
+            />
+            {form.place && (
+              <p className="text-sm text-[#f0f0f0]/80 mt-1">
+                Selected: {form.place}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">

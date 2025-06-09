@@ -1,45 +1,10 @@
+import Button from '@/components/UI/Button';
+import Input from '@/components/UI/Input';
+import Wrapper from '@/components/Wrapper';
 import { resetPassword } from '@/services/authService';
-import React, { FormEvent, useState, useEffect } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-
-// Mock components - replace with your actual components
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-md w-full space-y-8">
-      {children}
-    </div>
-  </div>
-);
-
-const Input = ({ placeholder, type, onChange, value }: {
-  placeholder: string;
-  type: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-}) => (
-  <input
-    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm mb-4"
-    placeholder={placeholder}
-    type={type}
-    onChange={onChange}
-    value={value}
-    required
-  />
-);
-
-const Button = ({ children, type, disabled }: {
-  children: React.ReactNode;
-  type: 'submit' | 'button';
-  disabled?: boolean;
-}) => (
-  <button
-    type={type}
-    disabled={disabled}
-    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    {children}
-  </button>
-);
+import React, { FormEvent, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 const ResetPassword: React.FC = () => {
   const [password, setPassword] = useState<string>('');
@@ -47,12 +12,14 @@ const ResetPassword: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const {token} = useParams();
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+    console.log(password);
+    console.log(confirmPassword);
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -64,7 +31,9 @@ const ResetPassword: React.FC = () => {
     }
 
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      setError('Password must contain at least one lowercase letter, one uppercase letter, and one number');
+      setError(
+        'Password must contain at least one lowercase letter, one uppercase letter, and one number'
+      );
       return;
     }
 
@@ -72,24 +41,21 @@ const ResetPassword: React.FC = () => {
     setError(null);
     setMessage(null);
 
-    try {
-     const data = await resetPassword(token);
+      const data = await resetPassword(token, password);
 
-      if (!data.message.toLowerCase().include("failed")) {
-        setMessage('Password reset successful! You can now log in with your new password.');
+      if (!data.message.includes('failed')) {
+        setMessage(
+          'Password reset successful! You can now log in with your new password.'
+        );
         setPassword('');
         setConfirmPassword('');
-        
+        await new Promise(res => setTimeout(res, 3000));
         await navigate('/login');
+      setIsLoading(false);
       } else {
         setError(data.message || 'Something went wrong');
-      }
-    } catch (error: any) {
-      console.error('Reset password failed:', error);
-      setError('Network error. Please try again.');
-    } finally {
       setIsLoading(false);
-    }
+      }
   };
 
   if (!token) {
@@ -103,7 +69,7 @@ const ResetPassword: React.FC = () => {
             The password reset link is invalid or has expired.
           </p>
           <button
-            onClick={() => window.location.href = '/forgot-password'}
+            onClick={async () => navigate("/login")}
             className="mt-4 font-medium text-indigo-600 hover:text-indigo-500"
           >
             Request a new reset link
@@ -115,7 +81,8 @@ const ResetPassword: React.FC = () => {
 
   return (
     <Wrapper>
-      <div>
+      <ToastContainer theme="dark"/>
+      <div className="w-full">
         <h2 className="mt-6 text-center text-3xl font-extrabold">
           Reset your password
         </h2>
@@ -123,8 +90,8 @@ const ResetPassword: React.FC = () => {
           Enter your new password below
         </p>
       </div>
-      
-      <div className="mt-8 space-y-6" onSubmit={handleSubmit}>
+
+      <div className="mt-8 space-y-6 flex flex-col items-center" onSubmit={handleSubmit}>
         <div className="rounded-md shadow-sm space-y-4">
           <Input
             placeholder="New password"
@@ -151,13 +118,13 @@ const ResetPassword: React.FC = () => {
         </div>
 
         {message && (
-          <div className="rounded-md bg-green-50 p-4">
+          <div className="rounded-md p-4">
             <div className="text-sm text-green-700">{message}</div>
           </div>
         )}
 
         {error && (
-          <div className="rounded-md bg-red-50 p-4">
+          <div className="rounded-md p-4">
             <div className="text-sm text-red-700">{error}</div>
           </div>
         )}
@@ -171,7 +138,7 @@ const ResetPassword: React.FC = () => {
         <div className="text-center">
           <button
             type="button"
-            onClick={() => window.location.href = '/login'}
+            onClick={() => (window.location.href = '/login')}
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Back to Login

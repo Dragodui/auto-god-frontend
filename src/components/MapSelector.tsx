@@ -20,13 +20,24 @@ const MapSelector: React.FC<MapSelectorProps> = ({ onLocationSelect }) => {
     });
 
     return position === null ? null : (
-      <Marker position={position} icon={L.icon({ iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png' })} />
+      <Marker
+        position={position}
+        icon={L.icon({
+          iconUrl:
+            'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        })}
+      />
     );
   };
 
   return (
     <div className="h-64 w-full">
-      <MapContainer center={[51.505, -0.09]} zoom={13} className="h-full w-full" scrollWheelZoom={true}>
+      <MapContainer
+        center={[51.505, -0.09]}
+        zoom={13}
+        className="h-full w-full"
+        scrollWheelZoom={true}
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

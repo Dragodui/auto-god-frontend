@@ -46,7 +46,7 @@ const ChatsPage: React.FC = () => {
   useEffect(() => {
     if (chatId && chats.length > 0) {
       // Check if the chat exists in the fetched chats
-      const chatExists = chats.find(chat => chat._id === chatId);
+      const chatExists = chats.find((chat) => chat._id === chatId);
       if (chatExists) {
         dispatch(fetchChatById(chatId));
       } else {
@@ -260,8 +260,8 @@ const ChatsPage: React.FC = () => {
                   {chatId ? (
                     <div className="text-center">
                       <p>Chat not found</p>
-                      <Link 
-                        to="/market/chats" 
+                      <Link
+                        to="/market/chats"
                         className="text-blue-400 hover:text-blue-300 underline"
                       >
                         Go back to chats

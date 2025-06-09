@@ -54,24 +54,26 @@ export const logout = async (): Promise<MessageResponse> => {
   }
 };
 
-export const forgetPassword = async(email: string) => {
- try {
-   const response = await api.post("/auth/forgot-password", {
-    email
-   });
-  return response.data;
- } catch (error) {
-   console.error('Error while forget password: ', error);
-    return { message: 'Forget password failed' };
- }
-}
-
-export const resetPassword = async(token: string) => {
+export const forgetPassword = async (email: string) => {
   try {
-   const response = await api.post(`/auth/reset-password/${token}`);
-   return response.data;
- } catch (error) {
-   console.error('Error while reset password: ', error);
+    const response = await api.post('/auth/forgot-password', {
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error while forget password: ', error);
+    return { message: 'Forget password failed' };
+  }
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  try {
+    const response = await api.post(`/auth/reset-password/${token}`, {
+      password
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error while reset password: ', error);
     return { message: 'Reset password failed' };
- }
-}
+  }
+};

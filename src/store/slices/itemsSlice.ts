@@ -150,19 +150,19 @@ const itemsSlice = createSlice({
       .addCase(purchaseItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      }).addCase(fetchUserItems.pending, (state) => {
+      })
+      .addCase(fetchUserItems.pending, (state) => {
         state.loading = true;
         state.error = null;
-      }
-      ).addCase(fetchUserItems.fulfilled, (state, action) => {
+      })
+      .addCase(fetchUserItems.fulfilled, (state, action) => {
         state.userItems = action.payload;
         state.loading = false;
-      }
-      ).addCase(fetchUserItems.rejected, (state, action) => {
+      })
+      .addCase(fetchUserItems.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      }
-      );
+      });
   },
 });
 

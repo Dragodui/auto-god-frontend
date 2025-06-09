@@ -82,7 +82,7 @@ const Register: React.FC = () => {
           required
         />
         <p>
-          Have an account? <Link to="/login">Log in</Link>
+          Have an account? <Link className='text-link underline' to="/login">Log in</Link>
         </p>
         <p className="text-red-500">{error}</p>
         <Button addStyles="max-w-[300px] w-full" type="submit">

@@ -27,7 +27,6 @@ const Profile: FC = () => {
   const [lastActivity, setLastActivity] = useState<Activity[] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditingPassword, setIsEditingPassword] = useState<boolean>(false);
-  
 
   const [editForm, setEditForm] = useState<ChangeUserData>({
     name: '',
@@ -54,26 +53,26 @@ const Profile: FC = () => {
       }
     });
 
-    getLastUserActivity().then((data) => {
-      if (Array.isArray(data)) {
-        setLastActivity(data);
-      }
-    }).catch((error) => console.error('Error fetching last activity:', error));
+    getLastUserActivity()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLastActivity(data);
+        }
+      })
+      .catch((error) => console.error('Error fetching last activity:', error));
   }, []);
 
   const notify = (content: string, type?: string) => {
     if (type === 'error') {
       toast.error(content, { position: 'top-right', autoClose: 5000 });
-    }
-    else {
+    } else {
       toast.success(content, { position: 'top-right', autoClose: 5000 });
     }
-  }
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-  
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,18 +89,22 @@ const Profile: FC = () => {
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const data = await changePassword(passwordForm);
-  
-  if (data && typeof data === 'object' && ('message' in data || 'msg' in data) && !data.message?.includes('successfully')) {
-    notify(`Error: ${data.message || data.msg}`, 'error');
-  } 
-  else {
-    setPasswordForm({ currentPassword: '', newPassword: '' });
-    notify('Password updated successfully');
-    setIsEditingPassword(false);
-  }
-};
+    e.preventDefault();
+    const data = await changePassword(passwordForm);
+
+    if (
+      data &&
+      typeof data === 'object' &&
+      ('message' in data || 'msg' in data) &&
+      !data.message?.includes('successfully')
+    ) {
+      notify(`Error: ${data.message || data.msg}`, 'error');
+    } else {
+      setPasswordForm({ currentPassword: '', newPassword: '' });
+      notify('Password updated successfully');
+      setIsEditingPassword(false);
+    }
+  };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await uploadUserAvatar(e);
@@ -116,8 +119,7 @@ const Profile: FC = () => {
   return (
     <Wrapper>
       <div className="min-h-screen bg-bg text-text w-full">
-        <ToastContainer 
-theme="dark" />
+        <ToastContainer theme="dark" />
         <div className="mx-auto">
           <div className="rounded-xl overflow-hidden">
             <div className="md:flex px-8 py-4">
@@ -199,18 +201,27 @@ theme="dark" />
                       {userData.name} {userData.lastName}
                     </h1>
                     <p className="mt-2 text-gray-400">@{userData.nickname}</p>
-                    <Button onClick={() => setIsEditing(true)} addStyles="mt-4 text-sm">
+                    <Button
+                      onClick={() => setIsEditing(true)}
+                      addStyles="mt-4 text-sm"
+                    >
                       Edit Profile
                     </Button>
                     <br />
-                    <Button onClick={() => setIsEditingPassword(true)} addStyles="text-sm mt-2">
+                    <Button
+                      onClick={() => setIsEditingPassword(true)}
+                      addStyles="text-sm mt-2"
+                    >
                       Change Password
                     </Button>
                   </>
                 )}
 
                 {isEditingPassword && (
-                  <form onSubmit={handlePasswordSubmit} className="space-y-4 mt-6">
+                  <form
+                    onSubmit={handlePasswordSubmit}
+                    className="space-y-4 mt-6"
+                  >
                     <Input
                       type="password"
                       name="currentPassword"
@@ -251,13 +262,16 @@ theme="dark" />
                 <div className="flex items-center">
                   <StarIcon className="h-6 w-6 text-secondary mr-2" />
                   <span>
-                    {userData.rank.charAt(0).toUpperCase() + userData.rank.slice(1)} Rank
+                    {userData.rank.charAt(0).toUpperCase() +
+                      userData.rank.slice(1)}{' '}
+                    Rank
                   </span>
                 </div>
                 <div className="flex items-center">
                   <CalendarIcon className="h-6 w-6 text-secondary mr-2" />
                   <span>
-                    Member since {new Date(userData.createdAt).toLocaleDateString()}
+                    Member since{' '}
+                    {new Date(userData.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -272,29 +286,39 @@ theme="dark" />
               {lastActivity && lastActivity.length > 0 ? (
                 lastActivity.map((activity: any) => (
                   <li key={activity.post._id}>
-                     <span> <strong>In post: </strong>
-                    <Link
-                      to={`/posts/${activity.post._id}`}
-                      className="underline text-link"
-                    >
-                      {activity.post.title}
-                    </Link></span>
-                    {
-                      activity.comment && (
-                        <p>
-                          <strong>Wrote:</strong> {activity.comment.content}
-                        </p>
-                      )
-                    }
-                      <p className="text-gray-400"> {(() => {
-                      const date = new Date(activity.post.createdAt);
-                      const day = String(date.getDate()).padStart(2, '0');
-                      const month = String(date.getMonth() + 1).padStart(2, '0');
-                      const year = date.getFullYear();
-                      const hours = String(date.getHours()).padStart(2, '0');
-                      const minutes = String(date.getMinutes()).padStart(2, '0');
-                      return `${day}.${month}.${year} ${hours}:${minutes}`;
-                    })()}</p>
+                    <span>
+                      {' '}
+                      <strong>In post: </strong>
+                      <Link
+                        to={`/posts/${activity.post._id}`}
+                        className="underline text-link"
+                      >
+                        {activity.post.title}
+                      </Link>
+                    </span>
+                    {activity.comment && (
+                      <p>
+                        <strong>Wrote:</strong> {activity.comment.content}
+                      </p>
+                    )}
+                    <p className="text-gray-400">
+                      {' '}
+                      {(() => {
+                        const date = new Date(activity.post.createdAt);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(
+                          2,
+                          '0'
+                        );
+                        const year = date.getFullYear();
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(
+                          2,
+                          '0'
+                        );
+                        return `${day}.${month}.${year} ${hours}:${minutes}`;
+                      })()}
+                    </p>
                   </li>
                 ))
               ) : (

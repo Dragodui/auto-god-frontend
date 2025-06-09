@@ -338,50 +338,52 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postId }) => {
       <h2 className="text-2xl font-bold mb-6">Comments</h2>
 
       {/* Comment Form */}
-    {
-      currentUser && (
-          <form onSubmit={handleSubmitComment} className="mb-8">
-        <div className="flex gap-4">
-          <div className="w-10 h-10 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
-            {currentUser?.avatar ? (
-              <img
-                src={getImage(currentUser.avatar)}
-                alt={currentUser.name}
-                className="w-full h-full rounded-full"
+      {currentUser && (
+        <form onSubmit={handleSubmitComment} className="mb-8">
+          <div className="flex gap-4">
+            <div className="w-10 h-10 rounded-full bg-[#32323E] flex items-center justify-center flex-shrink-0">
+              {currentUser?.avatar ? (
+                <img
+                  src={getImage(currentUser.avatar)}
+                  alt={currentUser.name}
+                  className="w-full h-full rounded-full"
+                />
+              ) : (
+                <User size={20} className="text-gray-500" />
+              )}
+            </div>
+            <div className="flex-1">
+              <textarea
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+                placeholder="Write a comment..."
+                className="w-full bg-[#32323E] rounded-lg p-3 text-white resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-[#4A4A5A]"
               />
-            ) : (
-              <User size={20} className="text-gray-500" />
-            )}
-          </div>
-          <div className="flex-1">
-            <textarea
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              placeholder="Write a comment..."
-              className="w-full bg-[#32323E] rounded-lg p-3 text-white resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-[#4A4A5A]"
-            />
-            <div className="flex justify-end mt-2">
-              <button
-                type="submit"
-                disabled={!commentContent.trim()}
-                className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send size={16} />
-                Post Comment
-              </button>
+              <div className="flex justify-end mt-2">
+                <button
+                  type="submit"
+                  disabled={!commentContent.trim()}
+                  className="bg-[#32323E] hover:bg-[#3E3E4A] px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send size={16} />
+                  Post Comment
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-      )
-    }
+        </form>
+      )}
 
       {/* Comments List */}
       {loading ? (
         <div className="text-center py-4">Loading comments...</div>
       ) : (
         <>
-          {displayedComments.length ? displayedComments.map(renderComment) : <p className='text-gray-500'>No comments for this post yet.</p>}
+          {displayedComments.length ? (
+            displayedComments.map(renderComment)
+          ) : (
+            <p className="text-gray-500">No comments for this post yet.</p>
+          )}
           {parentComments.length > 3 && (
             <button
               onClick={() => setShowAllComments(!showAllComments)}

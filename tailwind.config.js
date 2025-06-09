@@ -8,7 +8,7 @@ export default {
         blocks: '#2c2e4c',
         bg: '#222225',
         text: '#f0f0f0',
-        link: "#9ca1ff"
+        link: '#9ca1ff',
       },
       fontFamily: {
         sansation: ['sansation', 'sans-serif'],

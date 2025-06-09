@@ -13,15 +13,16 @@ const ItemList: React.FC = () => {
   const { items, userItems, loading, error } = useSelector(
     (state: RootState) => state.items
   );
-  const {userId} = useAuth();
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'myItems'>('marketplace');
+  const { userId } = useAuth();
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'myItems'>(
+    'marketplace'
+  );
 
   useEffect(() => {
     dispatch(fetchItems());
     if (userId) {
       dispatch(fetchUserItems());
     }
-
   }, [dispatch]);
 
   if (loading) {
@@ -100,10 +101,9 @@ const ItemList: React.FC = () => {
           {currentItems.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <div className="text-text/60 text-lg">
-                {activeTab === 'marketplace' 
-                  ? 'No items available in the marketplace' 
-                  : 'You haven\'t added any items yet'
-                }
+                {activeTab === 'marketplace'
+                  ? 'No items available in the marketplace'
+                  : "You haven't added any items yet"}
               </div>
               {activeTab === 'myItems' && (
                 <Link
@@ -145,13 +145,15 @@ const ItemList: React.FC = () => {
                     <span className="text-2xl font-bold text-secondary">
                       ${item.price}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      item.status === 'available' 
-                        ? 'bg-secondary/20 text-secondary'
-                        : item.status === 'sold'
-                        ? 'bg-red-500/20 text-red-400'
-                        : 'bg-link/20 text-link'
-                    }`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        item.status === 'available'
+                          ? 'bg-secondary/20 text-secondary'
+                          : item.status === 'sold'
+                            ? 'bg-red-500/20 text-red-400'
+                            : 'bg-link/20 text-link'
+                      }`}
+                    >
                       {item.status}
                     </span>
                   </div>

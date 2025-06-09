@@ -6,7 +6,7 @@ export const getCurrentProfileData = async (): Promise<
 > => {
   try {
     const response = await api.get('/auth/me');
-    return response.data || [];
+    return response.data;
   } catch (error) {
     console.error('Error while getting user info: ', error);
     return { message: 'Error while getting user info' };
@@ -68,11 +68,13 @@ export const changePassword = async (passwordForm: {
 }) => {
   try {
     if (!passwordForm.currentPassword || !passwordForm.newPassword) {
-      return {message: 'Both current and new passwords are required'};
+      return { message: 'Both current and new passwords are required' };
     }
-  if (passwordForm.currentPassword === passwordForm.newPassword) {
-    return {message: 'New password must be different from the current password'};
-  }
+    if (passwordForm.currentPassword === passwordForm.newPassword) {
+      return {
+        message: 'New password must be different from the current password',
+      };
+    }
     const response = await api.patch('/user/changePassword', {
       oldPassword: passwordForm.currentPassword,
       newPassword: passwordForm.newPassword,
@@ -80,11 +82,15 @@ export const changePassword = async (passwordForm: {
     return response.data;
   } catch (error: any) {
     console.error('Error while changing password: ', error);
-    
+
     const errorData = error.response?.data;
-    if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+    if (
+      errorData?.errors &&
+      Array.isArray(errorData.errors) &&
+      errorData.errors.length > 0
+    ) {
       return errorData.errors[0];
     }
     return errorData || 'An error occurred';
   }
-}
+};

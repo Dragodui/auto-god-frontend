@@ -68,4 +68,4 @@ export const acceptEvent = async (eventId: string) => {
     console.error('Error accepting event:', error);
     return { success: false, error };
   }
-}
+};

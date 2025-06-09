@@ -33,7 +33,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({
       switch (itemType) {
         case 'post':
           response = await deletePost(itemId);
-          navigate('/posts'); 
+          navigate('/posts');
           break;
         case 'comment':
           response = await deleteComment(itemId);
@@ -64,7 +64,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({
 
   return (
     <>
-    <ToastContainer theme='dark' />
+      <ToastContainer theme="dark" />
       <div className="flex items-center space-x-2">
         {isUserIncluded && banUser && username && banUser !== userId && (
           <button

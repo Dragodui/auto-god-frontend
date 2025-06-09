@@ -41,7 +41,7 @@ function App() {
               <Route path="/register" element={<Register />} />
             </Route>
             {/* private routes (only if authenticated) */}
-              <Route element={<ProtectedRoute />}>
+            <Route element={<ProtectedRoute />}>
               <Route path="/me" element={<Profile />} />
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/create-post" element={<CreatePost />} />
@@ -51,7 +51,7 @@ function App() {
               <Route path="/market/chats/:chatId" element={<ChatsPage />} />
             </Route>
             {/* public routes */}
-            <Route path="/resetPassword/:token" element={<ResetPassword/>}/>
+            <Route path="/resetPassword/:token" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
             <Route path="/topics" element={<Topics />} />

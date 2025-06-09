@@ -47,12 +47,12 @@ const SingleContent: React.FC<SingleContentProps> = ({
   const item = useSelector((state: RootState) =>
     contentType === 'post' ? state.posts.currentPost : state.news.currentNews
   );
-  console.log(item)
+  console.log(item);
   const loading = useSelector((state: RootState) =>
     contentType === 'post' ? state.posts.loading : state.news.loading
   );
   const { user: currentUser } = useSelector((state: RootState) => state.user);
-  
+
   const { userId } = useAuth();
   const [fullscreenImage, setFullscreenImage] = useState<boolean>(false);
 
@@ -75,10 +75,10 @@ const SingleContent: React.FC<SingleContentProps> = ({
     if (id) {
       switch (contentType) {
         case 'post':
-           dispatch(viewPost(id))
+          dispatch(viewPost(id));
           break;
         case 'news':
-           dispatch(viewNews(id));
+          dispatch(viewNews(id));
           break;
       }
     }
@@ -209,10 +209,7 @@ const SingleContent: React.FC<SingleContentProps> = ({
         <div className="container mx-auto py-16 px-4 md:px-0">
           <div className="flex items-center justify-between mb-4">
             {currentUser?.role === 'admin' && (
-              <AdminControls
-                itemType={contentType}
-                itemId={id}
-              />
+              <AdminControls itemType={contentType} itemId={id} />
             )}
           </div>
 
@@ -298,23 +295,24 @@ const SingleContent: React.FC<SingleContentProps> = ({
               <ReactMarkdown>{item.content}</ReactMarkdown>
             </div>
 
-          {
-            currentUser && (
-                <div className="mt-8 flex items-center gap-4">
-              <button
-                onClick={handleLike}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  isLiked()
-                    ? 'bg-red-500 hover:bg-red-600'
-                    : 'bg-[#32323E] hover:bg-[#3E3E4A]'
-                }`}
-              >
-                <Heart size={20} className={isLiked() ? 'fill-current' : ''} />
-                <span>{item.likes?.length || 0}</span>
-              </button>
-            </div>
-            )
-          }
+            {currentUser && (
+              <div className="mt-8 flex items-center gap-4">
+                <button
+                  onClick={handleLike}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    isLiked()
+                      ? 'bg-red-500 hover:bg-red-600'
+                      : 'bg-[#32323E] hover:bg-[#3E3E4A]'
+                  }`}
+                >
+                  <Heart
+                    size={20}
+                    className={isLiked() ? 'fill-current' : ''}
+                  />
+                  <span>{item.likes?.length || 0}</span>
+                </button>
+              </div>
+            )}
           </motion.div>
 
           {/* Comments Section */}
