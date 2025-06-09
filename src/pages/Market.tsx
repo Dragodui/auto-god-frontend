@@ -21,6 +21,7 @@ const ItemList: React.FC = () => {
     if (userId) {
       dispatch(fetchUserItems());
     }
+
   }, [dispatch]);
 
   if (loading) {
@@ -33,13 +34,13 @@ const ItemList: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Wrapper>
-        <div className="text-red-400 text-center p-4">{error}</div>
-      </Wrapper>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <Wrapper>
+  //       <div className="text-red-400 text-center p-4">{error}</div>
+  //     </Wrapper>
+  //   );
+  // }
 
   const currentItems = activeTab === 'marketplace' ? items : userItems;
 
@@ -90,7 +91,7 @@ const ItemList: React.FC = () => {
             onClick={() => setActiveTab('myItems')}
           >
             <Package size={18} />
-            My Items ({userItems.length})
+            My Items ({userItems?.length})
           </button>
         </div>
 

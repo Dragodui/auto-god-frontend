@@ -26,6 +26,7 @@ import Events from './pages/Events';
 import CreateEvent from './pages/CreateEvent';
 import Event from './pages/Event';
 import 'leaflet/dist/leaflet.css';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
               <Route path="/register" element={<Register />} />
             </Route>
             {/* private routes (only if authenticated) */}
-            <Route element={<ProtectedRoute />}>
+              <Route element={<ProtectedRoute />}>
               <Route path="/me" element={<Profile />} />
               <Route path="/create-news" element={<CreateNews />} />
               <Route path="/create-post" element={<CreatePost />} />
@@ -50,6 +51,7 @@ function App() {
               <Route path="/market/chats/:chatId" element={<ChatsPage />} />
             </Route>
             {/* public routes */}
+            <Route path="/resetPassword/:token" element={<ResetPassword/>}/>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
             <Route path="/topics" element={<Topics />} />
