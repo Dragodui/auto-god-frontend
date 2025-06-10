@@ -6,6 +6,7 @@ import {
   fetchChats,
   fetchChatById,
   sendMessage,
+  addMessage, // Make sure this is exported from your slice
 } from '@/store/slices/chatsSlice';
 import { getImage } from '@/utils/getImage';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,6 +14,7 @@ import { User, Send, LoaderIcon } from 'lucide-react';
 import Wrapper from '@/components/Wrapper';
 import { Link } from 'react-router-dom';
 import { getCurrentProfileData } from '@/services/userService';
+import socketService from '@/utils/socket'; // Import the socket service
 
 const ChatsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,7 +38,26 @@ const ChatsPage: React.FC = () => {
 
   useEffect(() => {
     getCurrentUser();
-  }, []);
+    
+    // Connect to socket when component mounts
+    socketService.connect();
+    
+    // Listen for new messages
+    socketService.onNewMessage((data) => {
+      const { chatId: messageChatId, message: newMessage } = data;
+      
+      // Only add message if it's for the current chat
+      if (currentChat && messageChatId === currentChat._id) {
+        dispatch(addMessage(newMessage));
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socketService.offNewMessage();
+      socketService.disconnect();
+    };
+  }, [dispatch, currentChat]);
 
   useEffect(() => {
     dispatch(fetchChats());
@@ -55,6 +76,13 @@ const ChatsPage: React.FC = () => {
       }
     }
   }, [chatId, chats, dispatch, navigate]);
+
+  // Join chat room when current chat changes
+  useEffect(() => {
+    if (currentChat) {
+      socketService.joinChat(currentChat._id);
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
