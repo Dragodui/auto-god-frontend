@@ -156,9 +156,9 @@ const chatsSlice = createSlice({
       // sendMessage
       .addCase(sendMessage.fulfilled, (state, action) => {
         if (state.currentChat) {
-          state.currentChat.messages.push(action.payload);
+          state.currentChat.updatedAt = new Date().toISOString();
         }
-      });
+      })
   },
 });
 
