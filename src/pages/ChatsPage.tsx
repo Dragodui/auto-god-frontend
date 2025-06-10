@@ -6,7 +6,7 @@ import {
   fetchChats,
   fetchChatById,
   sendMessage,
-  addMessage, // Make sure this is exported from your slice
+  addMessage,
 } from '@/store/slices/chatsSlice';
 import { getImage } from '@/utils/getImage';
 import { formatDistanceToNow } from 'date-fns';
@@ -14,7 +14,7 @@ import { User, Send, LoaderIcon } from 'lucide-react';
 import Wrapper from '@/components/Wrapper';
 import { Link } from 'react-router-dom';
 import { getCurrentProfileData } from '@/services/userService';
-import socketService from '@/utils/socket'; // Import the socket service
+import socketService from '@/utils/socket'; 
 
 const ChatsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,20 +39,16 @@ const ChatsPage: React.FC = () => {
   useEffect(() => {
     getCurrentUser();
     
-    // Connect to socket when component mounts
     socketService.connect();
     
-    // Listen for new messages
     socketService.onNewMessage((data) => {
       const { chatId: messageChatId, message: newMessage } = data;
       
-      // Only add message if it's for the current chat
       if (currentChat && messageChatId === currentChat._id) {
         dispatch(addMessage(newMessage));
       }
     });
 
-    // Cleanup on unmount
     return () => {
       socketService.offNewMessage();
       socketService.disconnect();
@@ -63,15 +59,12 @@ const ChatsPage: React.FC = () => {
     dispatch(fetchChats());
   }, [dispatch]);
 
-  // Handle URL parameter for specific chat
   useEffect(() => {
     if (chatId && chats.length > 0) {
-      // Check if the chat exists in the fetched chats
       const chatExists = chats.find((chat) => chat._id === chatId);
       if (chatExists) {
         dispatch(fetchChatById(chatId));
       } else {
-        // Chat doesn't exist, redirect to chats page
         navigate('/market/chats');
       }
     }
