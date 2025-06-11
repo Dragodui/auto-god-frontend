@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchItems, fetchUserItems } from '@/store/slices/itemsSlice';
 import { RootState, AppDispatch } from '@/store/store';
-import type { Item } from '@/types/index';
 import Wrapper from '@/components/Wrapper';
 import { MessageCircle, Plus, Package, Store } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
 
 const ItemList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { items, userItems, loading, error } = useSelector(
+  const { items = [], userItems = [], loading } = useSelector(
     (state: RootState) => state.items
   );
   const { userId } = useAuth();
@@ -23,7 +22,7 @@ const ItemList: React.FC = () => {
     if (userId) {
       dispatch(fetchUserItems());
     }
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   if (loading) {
     return (
@@ -35,19 +34,11 @@ const ItemList: React.FC = () => {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <Wrapper>
-  //       <div className="text-red-400 text-center p-4">{error}</div>
-  //     </Wrapper>
-  //   );
-  // }
-
   const currentItems = activeTab === 'marketplace' ? items : userItems;
 
   return (
     <Wrapper>
-      <div className="space-y-6 w-full">
+      <div className="space-y-6 w-full pt-[80px]">
         <div className="flex justify-between items-center flex-wrap gap-3">
           <h1 className="text-3xl font-bold text-text">
             {activeTab === 'marketplace' ? 'Marketplace' : 'My Items'}
@@ -92,7 +83,7 @@ const ItemList: React.FC = () => {
             onClick={() => setActiveTab('myItems')}
           >
             <Package size={18} />
-            My Items ({userItems?.length})
+            My Items ({userItems?.length || 0})
           </button>
         </div>
 
@@ -115,7 +106,7 @@ const ItemList: React.FC = () => {
               )}
             </div>
           ) : (
-            currentItems.map((item: Item) => (
+            currentItems.map((item) => (
               <Link
                 key={item._id}
                 to={`/market/${item._id}`}

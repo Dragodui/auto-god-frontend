@@ -9,6 +9,7 @@ import { RootState } from '@/store/store';
 import { getImage } from '@/utils/getImage';
 import { useSelector } from 'react-redux';
 import { getCurrentProfileData } from '@/services/userService';
+import NotificationBell from './NotificationBell';
 
 interface NavigationProps {
   fallingMenuPages: { label: string; href: string }[];
@@ -83,22 +84,26 @@ const Navigation: FC<NavigationProps> = ({
         <div className="pt-6 border-t border-gray-700 space-y-4">
           {isAuthenticated ? (
             <>
-              <Link
-                to="/me"
-                className={`flex items-center gap-3 py-3 px-4 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200 `}
-              >
-               {
-  loading ? (
-    <div className="w-[30px] h-[30px] rounded-full bg-gray-500 animate-pulse" />
-  ) : currentUser  && currentUser.avatar  ? (
-    <img className='w-[30px] h-[30px] rounded-full' src={getImage(currentUser.avatar)} alt="" />
-  ) : (
-    <CircleUser size={20} />
-  )
-}
-
-                <span>Profile</span>
-              </Link>
+              <div className="flex items-center gap-4 px-4">
+                <Link
+                  to="/me"
+                  className={`flex items-center gap-3 py-3 text-white hover:text-link hover:bg-gray-800 rounded-lg transition-all duration-200 flex-1`}
+                >
+                  {loading ? (
+                    <div className="w-[30px] h-[30px] rounded-full bg-gray-500 animate-pulse" />
+                  ) : currentUser && currentUser.avatar ? (
+                    <img
+                      className="w-[30px] h-[30px] rounded-full"
+                      src={getImage(currentUser.avatar)}
+                      alt=""
+                    />
+                  ) : (
+                    <CircleUser size={20} />
+                  )}
+                  <span>Profile</span>
+                </Link>
+                <NotificationBell />
+              </div>
               <button
                 onClick={() => logout()}
                 className="flex items-center gap-3 w-full py-3 px-4 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-all duration-200"
@@ -137,18 +142,22 @@ const Navigation: FC<NavigationProps> = ({
       <FallingMenu label="Topics" items={topics} />
       {isAuthenticated ? (
         <>
-          <Link to="/me" className="text-white hover:text-white">
-            {
-  loading ? (
-    <div className="w-[40px] h-[40px] rounded-full bg-gray-500 animate-pulse" />
-  ) : currentUser && currentUser.avatar ? (
-    <img className='w-[40px] h-[40px] rounded-full' src={getImage(currentUser.avatar)} alt="" />
-  ) : (
-    <CircleUser size={32} />
-  )
-}
-
-          </Link>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <Link to="/me" className="text-white hover:text-white">
+              {loading ? (
+                <div className="w-[40px] h-[40px] rounded-full bg-gray-500 animate-pulse" />
+              ) : currentUser && currentUser.avatar ? (
+                <img
+                  className="w-[40px] h-[40px] rounded-full"
+                  src={getImage(currentUser.avatar)}
+                  alt=""
+                />
+              ) : (
+                <CircleUser size={32} />
+              )}
+            </Link>
+          </div>
           <Button addStyles="text-sm" onClick={() => logout()}>
             Log Out
           </Button>

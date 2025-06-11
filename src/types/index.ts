@@ -10,9 +10,9 @@ export interface Item {
   description: string;
   price: number;
   photos: string[];
-  seller: User;
-  status: 'available' | 'sold';
-  buyer?: User;
+  status: 'available' | 'sold' | 'pending';
+  sellerId: string;
+  buyerId?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -103,3 +103,16 @@ export interface Tag {
   _id: string;
   title: string;
 }
+
+export interface Item {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  photos: string[];
+  status: 'available' | 'sold' | 'pending';
+  sellerId: string;
+  buyerId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
