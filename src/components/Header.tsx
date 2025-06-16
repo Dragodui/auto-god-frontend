@@ -5,10 +5,13 @@ import { getForumTopics } from '@/services/topicService';
 import { Topic } from '@/types';
 import Navigation from './UI/Navigation';
 import { X, Menu } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
+import NotificationBell from './UI/NotificationBell';
 
 const Header: FC = (): JSX.Element => {
   const [topics, setTopics] = useState<{ label: string; href: string }[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const { isAuthenticated } = useAuth();
   const fallingMenuPages = [
     {
       label: 'Home',
@@ -68,7 +71,7 @@ const Header: FC = (): JSX.Element => {
   }, [isMenuOpen]);
 
   return (
-    <header className="font-sansation py-[20px] z-[55] top- left-0 w-full fixed bg-bg">
+    <header className="font-sansation py-[20px] z-[55] top-0 left-0 w-full fixed bg-bg">
       <Wrapper isHeader={true}>
         <div className="w-full flex justify-between items-center">
           <Link
@@ -79,7 +82,8 @@ const Header: FC = (): JSX.Element => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden sm:block">
+          <div className="hidden sm:flex items-center gap-4">
+            {/* {isAuthenticated && <NotificationBell />} */}
             <Navigation fallingMenuPages={fallingMenuPages} topics={topics} />
           </div>
 

@@ -8,6 +8,7 @@ import {
   markAllAsRead,
   deleteNotification,
   Notification,
+  addNotification,
 } from '@/store/slices/notificationsSlice';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -32,7 +33,7 @@ const NotificationBell: React.FC = () => {
       newSocket.emit('join-notifications', user._id);
 
       newSocket.on('notification', (notification: Notification) => {
-        dispatch({ type: 'notifications/addNotification', payload: notification });
+        dispatch(addNotification(notification));
       });
 
       setSocket(newSocket);
